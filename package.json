@@ -1,15 +1,15 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "raynab",
-  "title": "raynab",
-  "description": "Manage your YNAB Budgets from Raycast.",
+  "title": "Raynab — Manage Your Budgets",
+  "description": "Manage your YNAB Budgets directly from Raycast.",
   "icon": "command-icon.png",
   "author": "CodetaroMiura",
   "license": "MIT",
   "commands": [
     {
-      "name": "index",
-      "title": "List Budgets",
+      "name": "budgets",
+      "title": "Select Budget",
       "description": "Lists your active budgets from YNAB.",
       "mode": "view"
     }
@@ -17,6 +17,7 @@
   "dependencies": {
     "@raycast/api": "^1.25.6",
     "node-fetch": "^3.0.0",
+    "node-localstorage": "^2.2.1",
     "ynab": "^1.25.0"
   },
   "devDependencies": {
@@ -29,6 +30,16 @@
     "react-devtools": "^4.19.2",
     "typescript": "^4.4.3"
   },
+  "preferences": [
+    {
+      "name": "apiToken",
+      "type": "password",
+      "required": true,
+      "title": "Token",
+      "description": "Your YNAB Personal Access Token",
+      "placeholder": "Enter your Personal access token"
+    }
+  ],
   "scripts": {
     "build": "ray build -e dist",
     "dev": "ray develop"
