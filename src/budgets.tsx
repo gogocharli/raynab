@@ -1,17 +1,8 @@
-import {
-  Icon,
-  List,
-  ActionPanel,
-  Color,
-  getLocalStorageItem,
-  setLocalStorageItem,
-  showToast,
-  ToastStyle,
-} from '@raycast/api';
-import { useState, useEffect } from 'react';
+import { Icon, List, ActionPanel, Color } from '@raycast/api';
 import { SWRConfig } from 'swr';
 
 import { cacheConfig } from './lib/cache';
+import { useSharedState } from './lib/useSharedState';
 import { useBudgets } from './lib/ynab';
 
 export default function Command() {
@@ -25,36 +16,7 @@ export default function Command() {
 function BudgetList() {
   const { data: budgets, isValidating } = useBudgets();
 
-  const [activeBudgetId, setActiveBudget] = useState('');
-
-  useEffect(() => {
-    async function getBudgetPreference() {
-      const savedPreference = (await getLocalStorageItem('activeBudget')) as string;
-      setActiveBudget(savedPreference ?? '');
-    }
-
-    getBudgetPreference();
-  }, []);
-
-  useEffect(() => {
-    async function updateBudgetPreference() {
-      const savedPreference = (await getLocalStorageItem('activeBudget')) as string;
-      if (activeBudgetId !== savedPreference) {
-        await setLocalStorageItem('activeBudget', activeBudgetId);
-      }
-    }
-    updateBudgetPreference();
-  }, [activeBudgetId]);
-
-  // For now we'll only show one budget at a time
-  function handleToggle(budgetId: string) {
-    if (activeBudgetId == budgetId) {
-      showToast(ToastStyle.Failure, 'Budget already selected');
-      return;
-    }
-
-    setActiveBudget(budgetId);
-  }
+  const [activeBudgetId, setActiveBudgetId] = useSharedState('activeBudgetId', '');
 
   return (
     <List isLoading={isValidating}>
@@ -62,8 +24,8 @@ function BudgetList() {
         <BudgetItem
           key={budget.id}
           budget={budget}
-          selectedId={activeBudgetId}
-          onToggle={() => handleToggle(budget.id)}
+          selectedId={activeBudgetId ?? ''}
+          onToggle={() => setActiveBudgetId(budget.id)}
         />
       ))}
     </List>
