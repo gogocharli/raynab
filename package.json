@@ -18,7 +18,7 @@
     "@raycast/api": "^1.25.6",
     "node-fetch": "^3.0.0",
     "node-localstorage": "^2.2.1",
-    "swr": "^1.1.0",
+    "swr": "^1.1.2-beta.0",
     "ynab": "^1.25.0"
   },
   "devDependencies": {

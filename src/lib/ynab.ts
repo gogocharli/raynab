@@ -3,7 +3,6 @@ import useSWR from 'swr';
 import * as ynab from 'ynab';
 import { displayError, isYnabError } from './errors';
 
-window.requestAnimationFrame = window.setTimeout;
 const client = new ynab.API(preferences.apiToken.value as string);
 
 async function fetchBudgets() {
