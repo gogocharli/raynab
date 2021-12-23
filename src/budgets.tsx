@@ -3,7 +3,7 @@ import { SWRConfig } from 'swr';
 
 import { cacheConfig } from './lib/cache';
 import { useSharedState } from './lib/useSharedState';
-import { useBudgets } from './lib/ynab';
+import { useBudgets, type BudgetInfo } from './lib/ynab';
 
 export default function Command() {
   return (
@@ -25,7 +25,7 @@ function BudgetList() {
           key={budget.id}
           budget={budget}
           selectedId={activeBudgetId ?? ''}
-          onToggle={() => setActiveBudgetId(budget.id)}
+          onToggle={() => setActiveBudgetId(budget?.id)}
         />
       ))}
     </List>
@@ -53,10 +53,4 @@ function BudgetItem({
       }
     />
   );
-}
-
-interface BudgetInfo {
-  id: string;
-  name: string;
-  last_modified_on?: string | null;
 }

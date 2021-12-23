@@ -12,10 +12,17 @@
       "title": "Select Active Budget",
       "description": "Lists your active budgets from YNAB.",
       "mode": "view"
+    },
+    {
+      "name": "transactions",
+      "title": "List Transactions",
+      "description": "Lists transactions for the selected budget.",
+      "mode": "view"
     }
   ],
   "dependencies": {
     "@raycast/api": "^1.25.6",
+    "dayjs": "^1.10.7",
     "node-fetch": "^3.0.0",
     "node-localstorage": "^2.2.1",
     "swr": "^1.1.2-beta.0",
