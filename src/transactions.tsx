@@ -1,6 +1,11 @@
 import { Icon, List, ActionPanel, Color, PushAction, Detail, CopyToClipboardAction } from '@raycast/api';
 import { SWRConfig } from 'swr';
 
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+
 import { cacheConfig } from './lib/cache';
 import { useSharedState } from './lib/useSharedState';
 import { useTransactions } from './lib/ynab';
@@ -30,13 +35,16 @@ function TransactionList() {
 }
 
 function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
-  const formattedTransactionAmt = Number(transaction.amount / 1000).toFixed(2);
+  const mainIcon =
+    transaction.amount > 0
+      ? { source: Icon.ChevronUp, tintColor: Color.Green }
+      : { source: Icon.ChevronDown, tintColor: Color.Red };
   return (
     <List.Item
-      icon={{ source: Icon.Dot, tintColor: transaction.amount > 0 ? Color.Green : Color.Red }}
+      icon={mainIcon}
       title={transaction.payee_name ?? transaction.id}
-      subtitle={formattedTransactionAmt}
-      accessoryTitle={transaction.account_name}
+      subtitle={formatPrice(transaction.amount)}
+      accessoryTitle={dayjs(transaction.date).fromNow()}
       actions={
         <ActionPanel title="Inspect Budget">
           {/* TODO: Add more actions and filters */}
