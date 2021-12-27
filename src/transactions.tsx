@@ -3,8 +3,10 @@ import { SWRConfig } from 'swr';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
 
 import { cacheConfig } from './lib/cache';
 import { useSharedState } from './lib/useSharedState';
@@ -56,12 +58,12 @@ function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
 }
 
 function TransactionDetails({ transaction }: { transaction: TransactionDetail }) {
-  /* TODO: Show amount, category, account, payee, etc */
   const markdown = `
   # ${transaction.amount > 0 ? 'Inflow to' : 'Outflow from'} ${transaction.account_name}
 
   - **Amount**: ${formatPrice(transaction.amount)} CAD
   - **Payee**: ${transaction.payee_name ?? 'Not Specified'}
+  - **Date**: ${dayjs(transaction.date).format('LL')}
   - **Category**: ${transaction.category_name ?? 'Not Specified'}
   `;
   return (
