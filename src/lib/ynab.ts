@@ -11,7 +11,7 @@ async function fetchBudgets() {
     const budgetsResponse = await client.budgets.getBudgets();
     const budgets = budgetsResponse.data.budgets;
 
-    const allBudgets: BudgetInfo[] = budgets.map(({ id, name, last_modified_on }) => {
+    const allBudgets: BudgetSummary[] = budgets.map(({ id, name, last_modified_on }) => {
       return { id, name, last_modified_on };
     });
 
@@ -81,7 +81,7 @@ export function useTransactions(budgetId = 'last-used') {
   return useSWR(budgetId, fetchTransactions);
 }
 
-export interface BudgetInfo {
+export interface BudgetSummary {
   id: string;
   name: string;
   last_modified_on?: string | null;

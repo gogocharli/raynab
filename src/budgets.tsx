@@ -1,9 +1,9 @@
 import { Icon, List, ActionPanel, Color } from '@raycast/api';
 import { SWRConfig } from 'swr';
 
-import { cacheConfig } from './lib/cache';
-import { useSharedState } from './lib/useSharedState';
-import { useBudgets, type BudgetInfo } from './lib/ynab';
+import { cacheConfig } from '@lib/cache';
+import { useSharedState } from '@lib/useSharedState';
+import { useBudgets, type BudgetSummary } from '@lib/ynab';
 
 export default function Command() {
   return (
@@ -37,7 +37,7 @@ function BudgetItem({
   selectedId,
   onToggle,
 }: {
-  budget: BudgetInfo;
+  budget: BudgetSummary;
   selectedId: string;
   onToggle: () => void;
 }) {
