@@ -14,7 +14,7 @@ export function TransactionItem({
   onGrouping,
 }: {
   transaction: TransactionDetail;
-  onGrouping: (groupType: GroupNames | null) => () => void;
+  onGrouping: (groupType: GroupNames) => () => void;
 }) {
   const mainIcon =
     transaction.amount > 0
