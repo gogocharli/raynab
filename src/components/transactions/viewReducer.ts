@@ -4,9 +4,13 @@ import type { FilterNames, Group, GroupNames } from '@srcTypes';
 import { randomId } from '@raycast/api';
 
 type TransactionDetailMap = Map<string, Group<TransactionDetail>>;
+type Filter = {
+  key: FilterNames;
+  value?: string;
+} | null;
 
 export interface ViewState {
-  filter: FilterNames | null;
+  filter: Filter;
   group: GroupNames | null;
   collection: TransactionDetail[] | TransactionDetailMap;
   initialCollection: TransactionDetail[];
@@ -14,7 +18,10 @@ export interface ViewState {
 
 type ViewAction =
   | { type: 'reset' }
-  | { type: 'filter'; filterBy: FilterNames }
+  | {
+      type: 'filter';
+      filterBy: Filter;
+    }
   | { type: 'group'; groupBy: GroupNames };
 
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
@@ -30,13 +37,13 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
     }
     case 'group': {
       const { groupBy: newGroup } = action;
-      const { collection: items, group } = state;
+      const { collection, group: currentGroup } = state;
 
-      if (newGroup === group) return state;
+      if (newGroup === currentGroup) return state;
 
-      const groups = Array.isArray(items)
-        ? items?.reduce(groupToMap(newGroup), new Map())
-        : Array.from(items.values())
+      const groups = Array.isArray(collection)
+        ? collection?.reduce(groupToMap(newGroup), new Map())
+        : Array.from(collection.values())
             .flatMap((g) => g.items)
             .reduce(groupToMap(newGroup), new Map());
 
@@ -46,7 +53,27 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
         collection: groups,
       };
     }
+    case 'filter': {
+      const { filterBy: newFilter } = action;
+      const { collection, filter: currentFilter } = state;
+
+      // TODO handle this case by returning the state without the filter
+      if (newFilter === null) return state;
+
+      if (isSameFilter(newFilter, currentFilter)) return state;
+
+      const filteredCollection = Array.isArray(collection)
+        ? collection.filter((item) => item[newFilter.key] === newFilter.value)
+        : collection;
+
+      return {
+        ...state,
+        filter: newFilter,
+        collection: filteredCollection,
+      };
+    }
     default:
+      //@ts-expect-error action type does not exist
       throw new Error(`Invalid action type "${action.type}" in transactionViewReducer`);
   }
 }
@@ -77,4 +104,17 @@ function groupToMap(groupBy: GroupNames) {
 
     return groupMap;
   };
+}
+
+function isSameFilter(filterA: Filter, filterB: Filter) {
+  if (!filterA || !filterB) return true;
+
+  if (!filterA?.key && !filterB?.key) return false;
+
+  for (const [key, value] of Object.entries(filterA)) {
+    if (key === filterB.key && value === filterB.value) continue;
+    return false;
+  }
+
+  return true;
 }
