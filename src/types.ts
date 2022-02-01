@@ -9,3 +9,8 @@ export interface Group<T> {
   title: string;
   items: T[];
 }
+
+export type Filter = {
+  key: FilterNames;
+  value?: string;
+} | null;

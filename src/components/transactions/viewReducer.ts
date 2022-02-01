@@ -1,13 +1,9 @@
 import type { TransactionDetail } from 'ynab';
-import type { FilterNames, Group, GroupNames } from '@srcTypes';
+import type { Filter, Group, GroupNames } from '@srcTypes';
 
 import { randomId } from '@raycast/api';
 
 type TransactionDetailMap = Map<string, Group<TransactionDetail>>;
-export type Filter = {
-  key: FilterNames;
-  value?: string;
-} | null;
 
 export interface ViewState {
   filter: Filter;
@@ -16,7 +12,7 @@ export interface ViewState {
   initialCollection: TransactionDetail[];
 }
 
-type ViewAction =
+export type ViewAction =
   | { type: 'reset' }
   | {
       type: 'filter';
@@ -25,7 +21,6 @@ type ViewAction =
   | { type: 'group'; groupBy: GroupNames };
 
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
-  console.log({ action, filter: state.filter, group: state.group });
   switch (action.type) {
     case 'reset': {
       const { initialCollection: initialItems } = state;
@@ -58,7 +53,7 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
       const { filterBy: newFilter } = action;
       const { collection, filter: currentFilter, group, initialCollection } = state;
 
-      if (newFilter === null) {
+      if (newFilter === null || isSameFilter(newFilter, currentFilter)) {
         const collection = group ? initialCollection.reduce(groupToMap(group), new Map()) : initialCollection;
         return {
           ...state,
@@ -67,11 +62,9 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
         };
       }
 
-      if (isSameFilter(newFilter, currentFilter)) return state;
-
       const filteredCollection = Array.isArray(collection)
         ? initialCollection.filter((item) => item[newFilter.key] === newFilter.value)
-        : // TODO improve performance of this. Most .reduce calls could be replaced by for loops
+        : // TODO improve performance. Most .reduce calls could be replaced by for loops
           initialCollection
             .filter((item) => item[newFilter.key] === newFilter.value)
             .reduce(groupToMap(group), new Map());

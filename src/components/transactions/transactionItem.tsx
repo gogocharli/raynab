@@ -1,3 +1,5 @@
+import { Filter, GroupNames } from '@srcTypes';
+
 import { Icon, List, ActionPanel, Color, PushAction } from '@raycast/api';
 
 import dayjs from 'dayjs';
@@ -7,18 +9,10 @@ dayjs.extend(relativeTime);
 import { formatPrice } from '@lib/utils';
 import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
-import { GroupNames } from '@srcTypes';
-import { Filter } from './viewReducer';
+import { useTransaction } from './transactionContext';
 
-export function TransactionItem({
-  transaction,
-  onGroup,
-  onFilter,
-}: {
-  transaction: TransactionDetail;
-  onGroup: (groupType: GroupNames) => () => void;
-  onFilter: (filterType: Filter) => () => void;
-}) {
+export function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
+  const { onGroup, onFilter } = useTransaction();
   const mainIcon =
     transaction.amount > 0
       ? { source: Icon.ChevronUp, tintColor: Color.Green }
