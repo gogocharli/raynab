@@ -4,7 +4,7 @@ import type { FilterNames, Group, GroupNames } from '@srcTypes';
 import { randomId } from '@raycast/api';
 
 type TransactionDetailMap = Map<string, Group<TransactionDetail>>;
-type Filter = {
+export type Filter = {
   key: FilterNames;
   value?: string;
 } | null;
@@ -25,6 +25,7 @@ type ViewAction =
   | { type: 'group'; groupBy: GroupNames };
 
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
+  console.log({ action, filter: state.filter, group: state.group });
   switch (action.type) {
     case 'reset': {
       const { initialCollection: initialItems } = state;
@@ -55,16 +56,25 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
     }
     case 'filter': {
       const { filterBy: newFilter } = action;
-      const { collection, filter: currentFilter } = state;
+      const { collection, filter: currentFilter, group, initialCollection } = state;
 
-      // TODO handle this case by returning the state without the filter
-      if (newFilter === null) return state;
+      if (newFilter === null) {
+        const collection = group ? initialCollection.reduce(groupToMap(group), new Map()) : initialCollection;
+        return {
+          ...state,
+          collection,
+          filter: null,
+        };
+      }
 
       if (isSameFilter(newFilter, currentFilter)) return state;
 
       const filteredCollection = Array.isArray(collection)
-        ? collection.filter((item) => item[newFilter.key] === newFilter.value)
-        : collection;
+        ? initialCollection.filter((item) => item[newFilter.key] === newFilter.value)
+        : // TODO improve performance of this. Most .reduce calls could be replaced by for loops
+          initialCollection
+            .filter((item) => item[newFilter.key] === newFilter.value)
+            .reduce(groupToMap(group), new Map());
 
       return {
         ...state,
@@ -87,7 +97,10 @@ export function initView({ filter = null, group = null, initialCollection: initi
   };
 }
 
-function groupToMap(groupBy: GroupNames) {
+function groupToMap(groupBy: GroupNames | null) {
+  // TODO improve this error
+  if (!groupBy) throw 'Not a valid Groupname';
+
   return function (groupMap: TransactionDetailMap, currentTransaction: TransactionDetail) {
     const groupName = currentTransaction[groupBy] ?? '';
 
@@ -107,13 +120,17 @@ function groupToMap(groupBy: GroupNames) {
 }
 
 function isSameFilter(filterA: Filter, filterB: Filter) {
-  if (!filterA || !filterB) return true;
+  if (!filterA && filterB) return false;
 
-  if (!filterA?.key && !filterB?.key) return false;
+  if (filterA && !filterB) return false;
 
-  for (const [key, value] of Object.entries(filterA)) {
-    if (key === filterB.key && value === filterB.value) continue;
-    return false;
+  if (filterA && filterB) {
+    if (!filterA?.key && !filterB?.key) return false;
+
+    for (const [key, value] of Object.entries(filterA)) {
+      if (key === filterB.key && value === filterB.value) continue;
+      return false;
+    }
   }
 
   return true;

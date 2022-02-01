@@ -6,7 +6,7 @@ import { List } from '@raycast/api';
 import { useSharedState } from '@lib/useSharedState';
 import { useTransactions } from '@lib/ynab';
 import { TransactionItem } from './transactionItem';
-import { initView, transactionViewReducer } from './viewReducer';
+import { Filter, initView, transactionViewReducer } from './viewReducer';
 
 export function TransactionView() {
   const [activeBudgetId] = useSharedState('activeBudgetId', '');
@@ -24,6 +24,7 @@ export function TransactionView() {
   );
 
   const handleGrouping = (groupType: GroupNames) => () => dispatch({ type: 'group', groupBy: groupType });
+  const handleFiltering = (filterType: Filter) => () => dispatch({ type: 'filter', filterBy: filterType });
 
   return (
     <List isLoading={isValidating}>
@@ -33,11 +34,13 @@ export function TransactionView() {
               title={group.title}
               key={group.id}
               children={group.items.map((t) => (
-                <TransactionItem transaction={t} key={t.id} onGrouping={handleGrouping} />
+                <TransactionItem transaction={t} key={t.id} onGroup={handleGrouping} onFilter={handleFiltering} />
               ))}
             />
           ))
-        : transactions?.map((t) => <TransactionItem transaction={t} key={t.id} onGrouping={handleGrouping} />)}
+        : collection.map((t) => (
+            <TransactionItem transaction={t} key={t.id} onGroup={handleGrouping} onFilter={handleFiltering} />
+          ))}
     </List>
   );
 }

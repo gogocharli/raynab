@@ -8,13 +8,16 @@ import { formatPrice } from '@lib/utils';
 import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
 import { GroupNames } from '@srcTypes';
+import { Filter } from './viewReducer';
 
 export function TransactionItem({
   transaction,
-  onGrouping,
+  onGroup,
+  onFilter,
 }: {
   transaction: TransactionDetail;
-  onGrouping: (groupType: GroupNames) => () => void;
+  onGroup: (groupType: GroupNames) => () => void;
+  onFilter: (filterType: Filter) => () => void;
 }) {
   const mainIcon =
     transaction.amount > 0
@@ -29,12 +32,32 @@ export function TransactionItem({
       actions={
         <ActionPanel title="Inspect Budget">
           {/* TODO: Add filters */}
-          <PushAction title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
-          <ActionPanel.Submenu title="Group by">
-            <ActionPanel.Item title="Category" icon={Icon.TextDocument} onAction={onGrouping('category_name')} />
-            <ActionPanel.Item title="Payee" icon={Icon.TextDocument} onAction={onGrouping('payee_name')} />
-            <ActionPanel.Item title="Account" icon={Icon.TextDocument} onAction={onGrouping('account_name')} />
-          </ActionPanel.Submenu>
+          <ActionPanel.Section>
+            <PushAction title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
+            <ActionPanel.Submenu title="Group by">
+              <ActionPanel.Item title="Category" icon={Icon.TextDocument} onAction={onGroup('category_name')} />
+              <ActionPanel.Item title="Payee" icon={Icon.TextDocument} onAction={onGroup('payee_name')} />
+              <ActionPanel.Item title="Account" icon={Icon.TextDocument} onAction={onGroup('account_name')} />
+            </ActionPanel.Submenu>
+          </ActionPanel.Section>
+          <ActionPanel.Section title="Filter">
+            <ActionPanel.Submenu title="Category">
+              {/* TODO Will need to map over all existing categories */}
+              <ActionPanel.Item
+                title="Subscriptions"
+                icon={Icon.TextDocument}
+                onAction={onFilter({ key: 'category_name', value: 'Subscriptions' })}
+              />
+            </ActionPanel.Submenu>
+            <ActionPanel.Submenu title="Account">
+              {/* TODO Will need to map over all existing accounts */}
+              <ActionPanel.Item
+                title="TD Checking"
+                icon={Icon.TextDocument}
+                onAction={onFilter({ key: 'account_name', value: 'TD Checking' })}
+              />
+            </ActionPanel.Submenu>
+          </ActionPanel.Section>
         </ActionPanel>
       }
     />
