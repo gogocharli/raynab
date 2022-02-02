@@ -29,6 +29,61 @@ async function fetchBudgets() {
   }
 }
 
+async function fetchBudget(selectedBudgetId: string) {
+  try {
+    const budgetResponse = await client.budgets.getBudgetById(selectedBudgetId);
+    const { categories, accounts, payees } = budgetResponse.data.budget;
+
+    return { categories, accounts, payees };
+  } catch (error) {
+    if (isYnabError(error)) {
+      displayError(error, 'Failed to fetch budget');
+    }
+
+    if (error instanceof Error) {
+      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+    }
+
+    throw error;
+  }
+}
+
+async function fetchCategoryGroups(selectedBudgetId: string) {
+  try {
+    const categoriesResponse = await client.categories.getCategories(selectedBudgetId);
+    const categoryGroups = categoriesResponse.data.category_groups;
+    return categoryGroups;
+  } catch (error) {
+    if (isYnabError(error)) {
+      displayError(error, 'Failed to fetch categories');
+    }
+
+    if (error instanceof Error) {
+      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+    }
+
+    throw error;
+  }
+}
+
+async function fetchPayees(selectedBudgetId: string) {
+  try {
+    const payeesResponse = await client.payees.getPayees(selectedBudgetId);
+    const payees = payeesResponse.data.payees;
+    return payees;
+  } catch (error) {
+    if (isYnabError(error)) {
+      displayError(error, 'Failed to fetch payees');
+    }
+
+    if (error instanceof Error) {
+      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+    }
+
+    throw error;
+  }
+}
+
 async function fetchAccounts(selectedBudgetId: string) {
   try {
     const accountsResponse = await client.accounts.getAccounts(selectedBudgetId || 'last-used');
@@ -77,8 +132,24 @@ export function useBudgets() {
   return useSWR('budgets', fetchBudgets);
 }
 
+export function useBudget(budgetId = 'last-used') {
+  return useSWR(budgetId, fetchBudget);
+}
+
 export function useTransactions(budgetId = 'last-used') {
   return useSWR(budgetId, fetchTransactions);
+}
+
+export function usePayees(budgetId = 'last-used') {
+  return useSWR(budgetId, fetchPayees);
+}
+
+export function useCategoryGroups(budgetId = 'last-used') {
+  return useSWR(budgetId, fetchCategoryGroups);
+}
+
+export function useAccounts(budgetId = 'last-used') {
+  return useSWR(budgetId, fetchAccounts);
 }
 
 export interface BudgetSummary {

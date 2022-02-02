@@ -1,3 +1,5 @@
+// import type {CategoryGroupWithCategories, } from 'ynab'
+
 export type GroupTypes = 'category' | 'payee' | 'account';
 export type GroupNames = `${GroupTypes}_name`;
 

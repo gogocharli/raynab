@@ -1,7 +1,7 @@
 import { Filter, GroupNames } from '@srcTypes';
+import { type ViewAction } from './viewReducer';
 
 import { createContext, useContext, type ReactNode } from 'react';
-import { type ViewAction } from './viewReducer';
 
 type TransactionContextReturnValues = {
   onGroup: (groupType: GroupNames) => () => void;

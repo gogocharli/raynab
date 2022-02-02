@@ -1,5 +1,3 @@
-import { Filter, GroupNames } from '@srcTypes';
-
 import { Icon, List, ActionPanel, Color, PushAction } from '@raycast/api';
 
 import dayjs from 'dayjs';
@@ -10,9 +8,14 @@ import { formatPrice } from '@lib/utils';
 import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
 import { useTransaction } from './transactionContext';
+import { useAccounts, useCategoryGroups, usePayees } from '@lib/ynab';
 
 export function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
   const { onGroup, onFilter } = useTransaction();
+  const { data: categoryGroups } = useCategoryGroups();
+  const { data: accounts } = useAccounts();
+  // const { data: payees } = usePayees();
+
   const mainIcon =
     transaction.amount > 0
       ? { source: Icon.ChevronUp, tintColor: Color.Green }
@@ -36,20 +39,26 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
           </ActionPanel.Section>
           <ActionPanel.Section title="Filter">
             <ActionPanel.Submenu title="Category">
-              {/* TODO Will need to map over all existing categories */}
-              <ActionPanel.Item
-                title="Subscriptions"
-                icon={Icon.TextDocument}
-                onAction={onFilter({ key: 'category_name', value: 'Subscriptions' })}
-              />
+              {categoryGroups
+                ?.flatMap((cG) => cG.categories)
+                .map(({ name: categoryName, id }) => (
+                  <ActionPanel.Item
+                    title={categoryName}
+                    icon={Icon.TextDocument}
+                    key={id}
+                    onAction={onFilter({ key: 'category_name', value: categoryName })}
+                  />
+                ))}
             </ActionPanel.Submenu>
             <ActionPanel.Submenu title="Account">
-              {/* TODO Will need to map over all existing accounts */}
-              <ActionPanel.Item
-                title="TD Checking"
-                icon={Icon.TextDocument}
-                onAction={onFilter({ key: 'account_name', value: 'TD Checking' })}
-              />
+              {accounts?.map(({ name: accountName, id }) => (
+                <ActionPanel.Item
+                  title={accountName}
+                  icon={Icon.TextDocument}
+                  key={id}
+                  onAction={onFilter({ key: 'account_name', value: accountName })}
+                />
+              ))}
             </ActionPanel.Submenu>
           </ActionPanel.Section>
         </ActionPanel>
