@@ -6,6 +6,10 @@ export type GroupNames = `${GroupTypes}_name`;
 export type FilterTypes = 'category' | 'account';
 export type FilterNames = `${FilterTypes}_name`;
 
+export type SortTypes = 'amount' | 'date';
+export type sortOrder = 'asc' | 'desc';
+export type SortNames = `${SortTypes}_${sortOrder}`;
+
 export interface Group<T> {
   id: string;
   title: string;

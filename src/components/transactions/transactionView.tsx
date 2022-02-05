@@ -16,6 +16,7 @@ export function TransactionView() {
     {
       filter: null,
       group: null,
+      sort: 'date_desc',
       collection: transactions,
       initialCollection: transactions,
     },

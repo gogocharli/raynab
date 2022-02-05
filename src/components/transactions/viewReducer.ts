@@ -1,3 +1,4 @@
+import { SortNames, SortTypes, sortOrder } from './../../types';
 import type { TransactionDetail } from 'ynab';
 import type { Filter, Group, GroupNames } from '@srcTypes';
 
@@ -8,6 +9,7 @@ type TransactionDetailMap = Map<string, Group<TransactionDetail>>;
 export interface ViewState {
   filter: Filter;
   group: GroupNames | null;
+  sort: SortNames | null;
   collection: TransactionDetail[] | TransactionDetailMap;
   initialCollection: TransactionDetail[];
 }
@@ -18,7 +20,8 @@ export type ViewAction =
       type: 'filter';
       filterBy: Filter;
     }
-  | { type: 'group'; groupBy: GroupNames };
+  | { type: 'group'; groupBy: GroupNames }
+  | { type: 'sort'; sortBy: SortNames };
 
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
   switch (action.type) {
@@ -27,6 +30,7 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
       return {
         filter: null,
         group: null,
+        sort: null,
         collection: initialItems,
         initialCollection: initialItems,
       };
@@ -75,16 +79,42 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
         collection: filteredCollection,
       };
     }
+    case 'sort': {
+      const { sortBy: newSort } = action;
+      const { collection, sort: currentSort, group, initialCollection } = state;
+
+      if (newSort === null || newSort === currentSort) {
+        const collection = group ? initialCollection.reduce(groupToMap(group), new Map()) : initialCollection;
+        return {
+          ...state,
+          collection,
+          sort: null,
+        };
+      }
+
+      const sortFn = sortCollectionBy(newSort);
+      const sortedCollection = Array.isArray(collection)
+        ? [...initialCollection].sort(sortFn)
+        : [...initialCollection].sort(sortFn).reduce(groupToMap(group), new Map());
+
+      return { ...state, sort: newSort, collection: sortedCollection };
+    }
     default:
       //@ts-expect-error action type does not exist
       throw new Error(`Invalid action type "${action.type}" in transactionViewReducer`);
   }
 }
 
-export function initView({ filter = null, group = null, initialCollection: initialItems }: ViewState): ViewState {
+export function initView({
+  filter = null,
+  group = null,
+  sort = null,
+  initialCollection: initialItems,
+}: ViewState): ViewState {
   return {
     filter,
     group,
+    sort,
     collection: initialItems,
     initialCollection: initialItems,
   };
@@ -109,6 +139,27 @@ function groupToMap(groupBy: GroupNames | null) {
     groupMap.set(groupName, { ...previousGroup, items: [...previousGroup?.items, currentTransaction] });
 
     return groupMap;
+  };
+}
+
+function sortCollectionBy(sortOrder: SortNames) {
+  const [key, order] = sortOrder.split('_') as [SortTypes, sortOrder];
+
+  return function compareItems(firstEl: TransactionDetail, secondEl: TransactionDetail) {
+    let shouldSwitch;
+    const left = key === 'date' ? new Date(firstEl[key]).getTime() : firstEl[key];
+    const right = key === 'date' ? new Date(secondEl[key]).getTime() : secondEl[key];
+
+    if (right > left) {
+      // When two negative transactions are compared, use absolutes
+      shouldSwitch = right < 0 && left < 0 ? -1 : 1;
+    } else if (left > right) {
+      shouldSwitch = right < 0 && left < 0 ? 1 : -1;
+    } else {
+      return 0;
+    }
+
+    return order === 'desc' ? shouldSwitch : -1 * shouldSwitch;
   };
 }
 

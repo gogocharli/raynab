@@ -1,4 +1,4 @@
-import { Filter, GroupNames } from '@srcTypes';
+import { Filter, GroupNames, SortNames } from '@srcTypes';
 import { type ViewAction } from './viewReducer';
 
 import { createContext, useContext, type ReactNode } from 'react';
@@ -6,6 +6,7 @@ import { createContext, useContext, type ReactNode } from 'react';
 type TransactionContextReturnValues = {
   onGroup: (groupType: GroupNames) => () => void;
   onFilter: (filterType: Filter) => () => void;
+  onSort: (sortType: SortNames) => () => void;
 };
 const TransactionContext = createContext<TransactionContextReturnValues | null>(null);
 
@@ -18,8 +19,9 @@ export function TransactionProvider({
 }) {
   const onFilter = (filterType: Filter) => () => dispatch({ type: 'filter', filterBy: filterType });
   const onGroup = (groupType: GroupNames) => () => dispatch({ type: 'group', groupBy: groupType });
+  const onSort = (sortType: SortNames) => () => dispatch({ type: 'sort', sortBy: sortType });
 
-  return <TransactionContext.Provider value={{ onFilter, onGroup }} children={children} />;
+  return <TransactionContext.Provider value={{ onFilter, onGroup, onSort }} children={children} />;
 }
 
 export function useTransaction() {
