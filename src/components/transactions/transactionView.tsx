@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { List } from '@raycast/api';
 
 import { useSharedState } from '@lib/useSharedState';
@@ -6,10 +6,12 @@ import { useTransactions } from '@lib/ynab';
 import { TransactionItem } from './transactionItem';
 import { initView, transactionViewReducer } from './viewReducer';
 import { TransactionProvider } from './transactionContext';
+import { type ManipulateType } from 'dayjs';
 
 export function TransactionView() {
   const [activeBudgetId] = useSharedState('activeBudgetId', '');
-  const { data: transactions = [], isValidating } = useTransactions(activeBudgetId);
+  const [timeline = 'month'] = useSharedState<ManipulateType>('timeline', 'm');
+  const { data: transactions = [], isValidating } = useTransactions(activeBudgetId, timeline);
 
   const [{ collection }, dispatch] = useReducer(
     transactionViewReducer,
@@ -22,6 +24,10 @@ export function TransactionView() {
     },
     initView
   );
+
+  useEffect(() => {
+    dispatch({ type: 'reset', initialCollection: transactions });
+  }, [timeline]);
 
   return (
     <TransactionProvider dispatch={dispatch}>

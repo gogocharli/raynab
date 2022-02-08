@@ -15,7 +15,7 @@ export interface ViewState {
 }
 
 export type ViewAction =
-  | { type: 'reset' }
+  | { type: 'reset'; initialCollection?: TransactionDetail[] }
   | {
       type: 'filter';
       filterBy: Filter;
@@ -26,7 +26,7 @@ export type ViewAction =
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
   switch (action.type) {
     case 'reset': {
-      const { initialCollection: initialItems } = state;
+      const initialItems = action.initialCollection ?? state.initialCollection;
       return {
         filter: null,
         group: null,

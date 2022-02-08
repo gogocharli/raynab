@@ -2,7 +2,10 @@ import { preferences, showToast, ToastStyle } from '@raycast/api';
 import useSWR from 'swr';
 import * as ynab from 'ynab';
 import { displayError, isYnabError } from './errors';
-import dayjs from 'dayjs';
+import dayjs, { type ManipulateType } from 'dayjs';
+
+import quarterOfYear from 'dayjs/plugin/quarterOfYear';
+dayjs.extend(quarterOfYear);
 
 const client = new ynab.API(preferences.apiToken.value as string);
 
@@ -103,11 +106,11 @@ async function fetchAccounts(selectedBudgetId: string) {
   }
 }
 
-async function fetchTransactions(selectedBudgetId: string) {
+export async function fetchTransactions(selectedBudgetId: string, period: ManipulateType) {
   try {
     const transactionsResponse = await client.transactions.getTransactions(
       selectedBudgetId,
-      dayjs().subtract(1, 'month').toISOString() // Show one month before by default
+      dayjs().subtract(1, period).toISOString() // Show one month before by default
     );
     const transactions = transactionsResponse.data.transactions;
 
@@ -136,8 +139,8 @@ export function useBudget(budgetId = 'last-used') {
   return useSWR(budgetId, fetchBudget);
 }
 
-export function useTransactions(budgetId = 'last-used') {
-  return useSWR(budgetId, fetchTransactions);
+export function useTransactions(budgetId = 'last-used', period: ManipulateType) {
+  return useSWR([budgetId, period], fetchTransactions);
 }
 
 export function usePayees(budgetId = 'last-used') {

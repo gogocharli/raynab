@@ -1,6 +1,6 @@
 import { Icon, List, ActionPanel, Color, PushAction } from '@raycast/api';
 
-import dayjs from 'dayjs';
+import dayjs, { type ManipulateType } from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
@@ -8,9 +8,11 @@ import { formatPrice } from '@lib/utils';
 import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
 import { useTransaction } from './transactionContext';
+import { useSharedState } from '@lib/useSharedState';
 
 export function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
   const { onGroup, onSort } = useTransaction();
+  const [, setTimeline] = useSharedState<ManipulateType>('timeline', 'month');
 
   const mainIcon =
     transaction.amount > 0
@@ -42,6 +44,13 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
               />
               <ActionPanel.Item title="Date (Old to New)" icon={Icon.TextDocument} onAction={onSort('date_asc')} />
               <ActionPanel.Item title="Date (New to Old)" icon={Icon.TextDocument} onAction={onSort('date_desc')} />
+            </ActionPanel.Submenu>
+            <ActionPanel.Submenu title="Timeline">
+              <ActionPanel.Item title="Last Day" icon={Icon.Calendar} onAction={() => setTimeline('day')} />
+              <ActionPanel.Item title="Last Week" icon={Icon.Calendar} onAction={() => setTimeline('week')} />
+              <ActionPanel.Item title="Last Month" icon={Icon.Calendar} onAction={() => setTimeline('month')} />
+              <ActionPanel.Item title="Last Quarter" icon={Icon.Calendar} onAction={() => setTimeline('quarter')} />
+              <ActionPanel.Item title="Last Year" icon={Icon.Calendar} onAction={() => setTimeline('year')} />
             </ActionPanel.Submenu>
           </ActionPanel.Section>
         </ActionPanel>
