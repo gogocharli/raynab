@@ -37,9 +37,15 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
     }
     case 'group': {
       const { groupBy: newGroup } = action;
-      const { collection, group: currentGroup } = state;
+      const { collection, group: currentGroup, initialCollection } = state;
 
-      if (newGroup === currentGroup) return state;
+      if (newGroup === currentGroup) {
+        return {
+          ...state,
+          collection: initialCollection,
+          group: null,
+        };
+      }
 
       const groups = Array.isArray(collection)
         ? collection?.reduce(groupToMap(newGroup), new Map())
