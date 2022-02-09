@@ -1,12 +1,12 @@
-import { Filter, GroupNames, SortNames } from '@srcTypes';
+import { Filter, GroupNames, onFilterType, onGroupType, onSortType, SortNames } from '@srcTypes';
 import { type ViewAction } from './viewReducer';
 
 import { createContext, useContext, type ReactNode } from 'react';
 
 type TransactionContextReturnValues = {
-  onGroup: (groupType: GroupNames) => () => void;
-  onFilter: (filterType: Filter) => () => void;
-  onSort: (sortType: SortNames) => () => void;
+  onGroup: onGroupType;
+  onFilter: onFilterType;
+  onSort: onSortType;
 };
 const TransactionContext = createContext<TransactionContextReturnValues | null>(null);
 

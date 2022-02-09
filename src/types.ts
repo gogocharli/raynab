@@ -20,3 +20,7 @@ export type Filter = {
   key: FilterNames;
   value?: string;
 } | null;
+
+export type onGroupType = (groupType: GroupNames) => () => void;
+export type onFilterType = (filterType: Filter) => () => void;
+export type onSortType = (sortType: SortNames) => () => void;
