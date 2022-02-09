@@ -44,7 +44,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
 
 function GroupBySubmenu({ onGroup }: { onGroup: onGroupType }) {
   return (
-    <ActionPanel.Submenu title="Group by">
+    <ActionPanel.Submenu title="Group by" shortcut={{ modifiers: ['cmd'], key: 'g' }}>
       <ActionPanel.Item title="Category" icon={Icon.TextDocument} onAction={onGroup('category_name')} />
       <ActionPanel.Item title="Payee" icon={Icon.TextDocument} onAction={onGroup('payee_name')} />
       <ActionPanel.Item title="Account" icon={Icon.TextDocument} onAction={onGroup('account_name')} />
@@ -54,7 +54,7 @@ function GroupBySubmenu({ onGroup }: { onGroup: onGroupType }) {
 
 function SortBySubmenu({ onSort }: { onSort: onSortType }) {
   return (
-    <ActionPanel.Submenu title="Sort By">
+    <ActionPanel.Submenu title="Sort By" shortcut={{ modifiers: ['cmd'], key: 's' }}>
       <ActionPanel.Item title="Amount (Low to High)" icon={Icon.TextDocument} onAction={onSort('amount_asc')} />
       <ActionPanel.Item title="Amount (High to Low)" icon={Icon.TextDocument} onAction={onSort('amount_desc')} />
       <ActionPanel.Item title="Date (Old to New)" icon={Icon.TextDocument} onAction={onSort('date_asc')} />
@@ -67,7 +67,7 @@ function TimelineSubMenu() {
   const [, setTimeline] = useSharedState<ManipulateType>('timeline', 'month');
 
   return (
-    <ActionPanel.Submenu title="Timeline">
+    <ActionPanel.Submenu title="Timeline" shortcut={{ modifiers: ['cmd'], key: 't' }}>
       <ActionPanel.Item title="Last Day" icon={Icon.Calendar} onAction={() => setTimeline('day')} />
       <ActionPanel.Item title="Last Week" icon={Icon.Calendar} onAction={() => setTimeline('week')} />
       <ActionPanel.Item title="Last Month" icon={Icon.Calendar} onAction={() => setTimeline('month')} />
