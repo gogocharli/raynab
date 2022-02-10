@@ -100,7 +100,7 @@ function OpenInYnabAction(props: OpenInYnabActionProps) {
 
   return (
     <OpenInBrowserAction
-      title={`Open ${props.accounts ? `Account${props.accountId ? '' : 's'}` : 'Budget'}`}
+      title={`Open ${props.accounts ? `Account${props.accountId ? '' : 's'}` : 'Budget'} in YNAB`}
       url={constructUrl(activeBudgetId, props)}
     />
   );
