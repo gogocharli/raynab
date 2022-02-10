@@ -10,8 +10,8 @@ import { type ManipulateType } from 'dayjs';
 
 export function TransactionView() {
   const [activeBudgetId] = useSharedState('activeBudgetId', '');
-  const [timeline = 'month'] = useSharedState<ManipulateType>('timeline', 'm');
-  const { data: transactions = [], isValidating } = useTransactions(activeBudgetId, timeline);
+  const [timeline, setTimeline] = useSharedState<ManipulateType>('timeline', 'month');
+  const { data: transactions = [], isValidating } = useTransactions(activeBudgetId, timeline ?? 'month');
 
   const [{ collection }, dispatch] = useReducer(
     transactionViewReducer,
@@ -30,7 +30,7 @@ export function TransactionView() {
   }, [timeline]);
 
   return (
-    <TransactionProvider dispatch={dispatch}>
+    <TransactionProvider dispatch={dispatch} onTimelineChange={setTimeline}>
       <List isLoading={isValidating}>
         {!Array.isArray(collection)
           ? Array.from(collection).map(([, group]) => (

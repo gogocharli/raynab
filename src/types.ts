@@ -1,5 +1,7 @@
 // import type {CategoryGroupWithCategories, } from 'ynab'
 
+import { ManipulateType } from 'dayjs';
+
 export type GroupTypes = 'category' | 'payee' | 'account';
 export type GroupNames = `${GroupTypes}_name`;
 
@@ -24,3 +26,4 @@ export type Filter = {
 export type onGroupType = (groupType: GroupNames) => () => void;
 export type onFilterType = (filterType: Filter) => () => void;
 export type onSortType = (sortType: SortNames) => () => void;
+export type onTimelineType = (period: ManipulateType) => void;

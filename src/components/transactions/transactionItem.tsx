@@ -1,6 +1,6 @@
 import { Icon, List, ActionPanel, Color, PushAction, OpenInBrowserAction } from '@raycast/api';
 
-import dayjs, { type ManipulateType } from 'dayjs';
+import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
@@ -9,10 +9,10 @@ import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
 import { useTransaction } from './transactionContext';
 import { useSharedState } from '@lib/useSharedState';
-import { onGroupType, onSortType } from '@srcTypes';
+import { onGroupType, onSortType, onTimelineType } from '@srcTypes';
 
 export function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
-  const { onGroup, onSort } = useTransaction();
+  const { onGroup, onSort, onTimelineChange } = useTransaction();
 
   const mainIcon =
     transaction.amount > 0
@@ -34,7 +34,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
           <ActionPanel.Section>
             <GroupBySubmenu onGroup={onGroup} />
             <SortBySubmenu onSort={onSort} />
-            <TimelineSubMenu />
+            <TimelineSubMenu onTimelineChange={onTimelineChange} />
           </ActionPanel.Section>
         </ActionPanel>
       }
@@ -63,16 +63,14 @@ function SortBySubmenu({ onSort }: { onSort: onSortType }) {
   );
 }
 
-function TimelineSubMenu() {
-  const [, setTimeline] = useSharedState<ManipulateType>('timeline', 'month');
-
+function TimelineSubMenu({ onTimelineChange }: { onTimelineChange: onTimelineType }) {
   return (
     <ActionPanel.Submenu title="Timeline" shortcut={{ modifiers: ['cmd'], key: 't' }}>
-      <ActionPanel.Item title="Last Day" icon={Icon.Calendar} onAction={() => setTimeline('day')} />
-      <ActionPanel.Item title="Last Week" icon={Icon.Calendar} onAction={() => setTimeline('week')} />
-      <ActionPanel.Item title="Last Month" icon={Icon.Calendar} onAction={() => setTimeline('month')} />
-      <ActionPanel.Item title="Last Quarter" icon={Icon.Calendar} onAction={() => setTimeline('quarter')} />
-      <ActionPanel.Item title="Last Year" icon={Icon.Calendar} onAction={() => setTimeline('year')} />
+      <ActionPanel.Item title="Last Day" icon={Icon.Calendar} onAction={() => onTimelineChange('day')} />
+      <ActionPanel.Item title="Last Week" icon={Icon.Calendar} onAction={() => onTimelineChange('week')} />
+      <ActionPanel.Item title="Last Month" icon={Icon.Calendar} onAction={() => onTimelineChange('month')} />
+      <ActionPanel.Item title="Last Quarter" icon={Icon.Calendar} onAction={() => onTimelineChange('quarter')} />
+      <ActionPanel.Item title="Last Year" icon={Icon.Calendar} onAction={() => onTimelineChange('year')} />
     </ActionPanel.Submenu>
   );
 }
