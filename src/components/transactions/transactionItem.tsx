@@ -9,10 +9,10 @@ import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
 import { useTransaction } from './transactionContext';
 import { useSharedState } from '@lib/useSharedState';
-import { onGroupType, onSortType, onTimelineType } from '@srcTypes';
+import { GroupNames, onGroupType, onSortType, onTimelineType, Period, SortNames } from '@srcTypes';
 
 export function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
-  const { onGroup, onSort, onTimelineChange } = useTransaction();
+  const { onGroup, onSort, onTimelineChange, state } = useTransaction();
 
   const mainIcon =
     transaction.amount > 0
@@ -32,9 +32,9 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
             <OpenInYnabAction />
           </ActionPanel.Section>
           <ActionPanel.Section>
-            <GroupBySubmenu onGroup={onGroup} />
-            <SortBySubmenu onSort={onSort} />
-            <TimelineSubMenu onTimelineChange={onTimelineChange} />
+            <GroupBySubmenu onGroup={onGroup} currentGroup={state.group} />
+            <SortBySubmenu onSort={onSort} currentSort={state.sort} />
+            <TimelineSubMenu onTimelineChange={onTimelineChange} currentTimeline={state.timeline ?? 'month'} />
           </ActionPanel.Section>
         </ActionPanel>
       }
@@ -42,35 +42,86 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
   );
 }
 
-function GroupBySubmenu({ onGroup }: { onGroup: onGroupType }) {
+interface RenderActionIcons<T> {
+  defaultIcon: Icon;
+  selectedIcon?: Icon;
+  currentType: T | null;
+}
+
+function renderActionIcon<T>({ defaultIcon, selectedIcon, currentType }: RenderActionIcons<T>) {
+  return function (actionType: T) {
+    if (actionType === currentType) return { source: selectedIcon ?? Icon.Checkmark, tintColor: Color.Green };
+
+    return { source: defaultIcon, tintColor: Color.SecondaryText };
+  };
+}
+
+function GroupBySubmenu({ onGroup, currentGroup }: { onGroup: onGroupType; currentGroup: GroupNames | null }) {
+  const renderGroupIcon = renderActionIcon<GroupNames>({
+    defaultIcon: Icon.TextDocument,
+    currentType: currentGroup,
+  });
+
   return (
     <ActionPanel.Submenu title="Group by" shortcut={{ modifiers: ['cmd'], key: 'g' }}>
-      <ActionPanel.Item title="Category" icon={Icon.TextDocument} onAction={onGroup('category_name')} />
-      <ActionPanel.Item title="Payee" icon={Icon.TextDocument} onAction={onGroup('payee_name')} />
-      <ActionPanel.Item title="Account" icon={Icon.TextDocument} onAction={onGroup('account_name')} />
+      <ActionPanel.Item title="Category" icon={renderGroupIcon('category_name')} onAction={onGroup('category_name')} />
+      <ActionPanel.Item title="Payee" icon={renderGroupIcon('payee_name')} onAction={onGroup('payee_name')} />
+      <ActionPanel.Item title="Account" icon={renderGroupIcon('account_name')} onAction={onGroup('account_name')} />
     </ActionPanel.Submenu>
   );
 }
 
-function SortBySubmenu({ onSort }: { onSort: onSortType }) {
+function SortBySubmenu({ onSort, currentSort }: { onSort: onSortType; currentSort: SortNames | null }) {
+  const renderSortIcon = renderActionIcon<SortNames>({
+    defaultIcon: Icon.Text,
+    currentType: currentSort,
+  });
+
   return (
     <ActionPanel.Submenu title="Sort By" shortcut={{ modifiers: ['cmd'], key: 's' }}>
-      <ActionPanel.Item title="Amount (Low to High)" icon={Icon.TextDocument} onAction={onSort('amount_asc')} />
-      <ActionPanel.Item title="Amount (High to Low)" icon={Icon.TextDocument} onAction={onSort('amount_desc')} />
-      <ActionPanel.Item title="Date (Old to New)" icon={Icon.TextDocument} onAction={onSort('date_asc')} />
-      <ActionPanel.Item title="Date (New to Old)" icon={Icon.TextDocument} onAction={onSort('date_desc')} />
+      <ActionPanel.Item
+        title="Amount (Low to High)"
+        icon={renderSortIcon('amount_asc')}
+        onAction={onSort('amount_asc')}
+      />
+      <ActionPanel.Item
+        title="Amount (High to Low)"
+        icon={renderSortIcon('amount_desc')}
+        onAction={onSort('amount_desc')}
+      />
+      <ActionPanel.Item title="Date (Old to New)" icon={renderSortIcon('date_asc')} onAction={onSort('date_asc')} />
+      <ActionPanel.Item title="Date (New to Old)" icon={renderSortIcon('date_desc')} onAction={onSort('date_desc')} />
     </ActionPanel.Submenu>
   );
 }
 
-function TimelineSubMenu({ onTimelineChange }: { onTimelineChange: onTimelineType }) {
+function TimelineSubMenu({
+  onTimelineChange,
+  currentTimeline,
+}: {
+  onTimelineChange: onTimelineType;
+  currentTimeline: Period;
+}) {
+  const renderTimelineIcon = renderActionIcon<Period>({
+    defaultIcon: Icon.Calendar,
+    currentType: currentTimeline,
+  });
+
   return (
     <ActionPanel.Submenu title="Timeline" shortcut={{ modifiers: ['cmd'], key: 't' }}>
-      <ActionPanel.Item title="Last Day" icon={Icon.Calendar} onAction={() => onTimelineChange('day')} />
-      <ActionPanel.Item title="Last Week" icon={Icon.Calendar} onAction={() => onTimelineChange('week')} />
-      <ActionPanel.Item title="Last Month" icon={Icon.Calendar} onAction={() => onTimelineChange('month')} />
-      <ActionPanel.Item title="Last Quarter" icon={Icon.Calendar} onAction={() => onTimelineChange('quarter')} />
-      <ActionPanel.Item title="Last Year" icon={Icon.Calendar} onAction={() => onTimelineChange('year')} />
+      <ActionPanel.Item title="Last Day" icon={renderTimelineIcon('day')} onAction={() => onTimelineChange('day')} />
+      <ActionPanel.Item title="Last Week" icon={renderTimelineIcon('week')} onAction={() => onTimelineChange('week')} />
+      <ActionPanel.Item
+        title="Last Month"
+        icon={renderTimelineIcon('month')}
+        onAction={() => onTimelineChange('month')}
+      />
+      <ActionPanel.Item
+        title="Last Quarter"
+        icon={renderTimelineIcon('quarter')}
+        onAction={() => onTimelineChange('quarter')}
+      />
+      <ActionPanel.Item title="Last Year" icon={renderTimelineIcon('year')} onAction={() => onTimelineChange('year')} />
     </ActionPanel.Submenu>
   );
 }

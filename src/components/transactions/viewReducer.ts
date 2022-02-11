@@ -1,27 +1,17 @@
-import { SortNames, SortTypes, sortOrder } from './../../types';
-import type { TransactionDetail } from 'ynab';
-import type { Filter, Group, GroupNames } from '@srcTypes';
+import type {
+  Filter,
+  Group,
+  GroupNames,
+  SortNames,
+  SortTypes,
+  sortOrder,
+  ViewAction,
+  ViewState,
+  TransactionDetail,
+  TransactionDetailMap,
+} from '@srcTypes';
 
 import { randomId } from '@raycast/api';
-
-type TransactionDetailMap = Map<string, Group<TransactionDetail>>;
-
-export interface ViewState {
-  filter: Filter;
-  group: GroupNames | null;
-  sort: SortNames | null;
-  collection: TransactionDetail[] | TransactionDetailMap;
-  initialCollection: TransactionDetail[];
-}
-
-export type ViewAction =
-  | { type: 'reset'; initialCollection?: TransactionDetail[] }
-  | {
-      type: 'filter';
-      filterBy: Filter;
-    }
-  | { type: 'group'; groupBy: GroupNames }
-  | { type: 'sort'; sortBy: SortNames };
 
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
   switch (action.type) {

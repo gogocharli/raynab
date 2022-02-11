@@ -13,7 +13,7 @@ export function TransactionView() {
   const [timeline, setTimeline] = useSharedState<ManipulateType>('timeline', 'month');
   const { data: transactions = [], isValidating } = useTransactions(activeBudgetId, timeline ?? 'month');
 
-  const [{ collection }, dispatch] = useReducer(
+  const [{ collection, group, sort, filter }, dispatch] = useReducer(
     transactionViewReducer,
     {
       filter: null,
@@ -30,7 +30,7 @@ export function TransactionView() {
   }, [timeline]);
 
   return (
-    <TransactionProvider dispatch={dispatch} onTimelineChange={setTimeline}>
+    <TransactionProvider dispatch={dispatch} state={{ group, sort, filter, timeline }} onTimelineChange={setTimeline}>
       <List isLoading={isValidating}>
         {!Array.isArray(collection)
           ? Array.from(collection).map(([, group]) => (
