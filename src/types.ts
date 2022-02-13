@@ -1,6 +1,4 @@
 // import type {CategoryGroupWithCategories, } from 'ynab'
-import { ManipulateType } from 'dayjs';
-
 import type { TransactionDetail as ynabTransactionDetail } from 'ynab';
 
 export type TransactionDetail = ynabTransactionDetail;
@@ -16,7 +14,7 @@ export type SortTypes = 'amount' | 'date';
 export type sortOrder = 'asc' | 'desc';
 export type SortNames = `${SortTypes}_${sortOrder}`;
 
-export type Period = ManipulateType;
+export type Period = 'day' | 'week' | 'month' | 'quarter' | 'year';
 
 export interface Group<T> {
   id: string;
@@ -32,7 +30,7 @@ export type Filter = {
 export type onGroupType = (groupType: GroupNames) => () => void;
 export type onFilterType = (filterType: Filter) => () => void;
 export type onSortType = (sortType: SortNames) => () => void;
-export type onTimelineType = (period: ManipulateType) => void;
+export type onTimelineType = (period: Period) => void;
 
 export interface ViewState {
   filter: Filter;
