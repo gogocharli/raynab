@@ -52,5 +52,5 @@ export type ViewAction =
   | { type: 'sort'; sortBy: SortNames };
 
 export type TransactionState = Omit<ViewState, 'collection' | 'initialCollection'> & {
-  timeline: ManipulateType | undefined;
+  timeline: Period | undefined;
 };
