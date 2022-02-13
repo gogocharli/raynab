@@ -4,15 +4,21 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-import { formatPrice } from '@lib/utils';
 import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
 import { useTransaction } from './transactionContext';
+import { formatPrice } from '@lib/utils';
 import { useSharedState } from '@lib/useSharedState';
 import { GroupNames, onGroupType, onSortType, onTimelineType, Period, SortNames } from '@srcTypes';
 
 export function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
-  const { onGroup, onSort, onTimelineChange, state } = useTransaction();
+  const {
+    onGroup,
+    onSort,
+    onTimelineChange,
+    state,
+    flags: [showFlags, setShowFlags],
+  } = useTransaction();
 
   const mainIcon =
     transaction.amount > 0
@@ -25,12 +31,18 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
       id={transaction.id}
       title={transaction.payee_name ?? transaction.id}
       subtitle={formatPrice(transaction.amount)}
+      accessoryIcon={showFlags ? { source: Icon.Dot, tintColor: getColor(transaction.flag_color) } : undefined}
       accessoryTitle={dayjs(transaction.date).fromNow()}
       actions={
         <ActionPanel title="Inspect Budget">
           <ActionPanel.Section>
             <Action.Push title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
             <OpenInYnabAction />
+            <Action
+              title="Toggle Flags"
+              onAction={() => setShowFlags((s) => !s)}
+              shortcut={{ modifiers: ['cmd'], key: 'f' }}
+            />
           </ActionPanel.Section>
           <ActionPanel.Section>
             <GroupBySubmenu onGroup={onGroup} currentGroup={state.group} />
@@ -138,4 +150,22 @@ function OpenInYnabAction(props: OpenInYnabActionProps) {
       url={constructUrl(activeBudgetId, props)}
     />
   );
+}
+
+function getColor(color: TransactionDetail.FlagColorEnum | null | undefined) {
+  const stringColor = color?.toString();
+  switch (stringColor) {
+    case 'red':
+      return Color.Red;
+    case 'green':
+      return Color.Green;
+    case 'purple':
+      return Color.Purple;
+    case 'orange':
+      return Color.Orange;
+    case 'blue':
+      return Color.Blue;
+    default:
+      return;
+  }
 }

@@ -10,7 +10,7 @@ import {
   ViewAction,
 } from '@srcTypes';
 
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 type TransactionContextReturnValues = {
   onGroup: onGroupType;
@@ -18,6 +18,7 @@ type TransactionContextReturnValues = {
   onSort: onSortType;
   onTimelineChange: onTimelineType;
   state: TransactionState;
+  flags: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 const TransactionContext = createContext<TransactionContextReturnValues | null>(null);
 
@@ -36,8 +37,13 @@ export function TransactionProvider({
   const onGroup = (groupType: GroupNames) => () => dispatch({ type: 'group', groupBy: groupType });
   const onSort = (sortType: SortNames) => () => dispatch({ type: 'sort', sortBy: sortType });
 
+  const flags = useState(false);
+
   return (
-    <TransactionContext.Provider value={{ onFilter, onGroup, onSort, onTimelineChange, state }} children={children} />
+    <TransactionContext.Provider
+      value={{ onFilter, onGroup, onSort, onTimelineChange, state, flags }}
+      children={children}
+    />
   );
 }
 
