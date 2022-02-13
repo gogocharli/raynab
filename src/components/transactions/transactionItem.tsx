@@ -39,7 +39,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
             <Action.Push title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
             <OpenInYnabAction />
             <Action
-              title="Toggle Flags"
+              title={`${showFlags ? 'Hide' : 'Show'} Flags`}
               onAction={() => setShowFlags((s) => !s)}
               shortcut={{ modifiers: ['cmd'], key: 'f' }}
             />
