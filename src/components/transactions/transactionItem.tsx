@@ -22,6 +22,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
   return (
     <List.Item
       icon={mainIcon}
+      id={transaction.id}
       title={transaction.payee_name ?? transaction.id}
       subtitle={formatPrice(transaction.amount)}
       accessoryTitle={dayjs(transaction.date).fromNow()}

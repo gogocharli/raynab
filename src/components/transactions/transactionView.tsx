@@ -6,14 +6,14 @@ import { useTransactions } from '@lib/ynab';
 import { TransactionItem } from './transactionItem';
 import { initView, transactionViewReducer } from './viewReducer';
 import { TransactionProvider } from './transactionContext';
-import { type ManipulateType } from 'dayjs';
+import { type Period } from '@srcTypes';
 
 export function TransactionView() {
   const [activeBudgetId] = useSharedState('activeBudgetId', '');
-  const [timeline, setTimeline] = useSharedState<ManipulateType>('timeline', 'month');
+  const [timeline, setTimeline] = useSharedState<Period>('timeline', 'month');
   const { data: transactions = [], isValidating } = useTransactions(activeBudgetId, timeline ?? 'month');
 
-  const [{ collection, group, sort, filter }, dispatch] = useReducer(
+  const [state, dispatch] = useReducer(
     transactionViewReducer,
     {
       filter: null,
@@ -29,9 +29,11 @@ export function TransactionView() {
     dispatch({ type: 'reset', initialCollection: transactions });
   }, [timeline]);
 
+  const { collection, group, sort, filter } = state;
+
   return (
     <TransactionProvider dispatch={dispatch} state={{ group, sort, filter, timeline }} onTimelineChange={setTimeline}>
-      <List isLoading={isValidating}>
+      <List isLoading={isValidating} searchBarPlaceholder={`Search transactions in the last ${timeline}`}>
         {!Array.isArray(collection)
           ? Array.from(collection).map(([, group]) => (
               <List.Section
