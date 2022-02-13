@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { List, showToast, Toast } from '@raycast/api';
 
 import { useSharedState } from '@lib/useSharedState';
@@ -27,6 +27,8 @@ export function TransactionView() {
 
   const { collection, group, sort, filter } = state;
 
+  // Prevents success toast from overriding a failure
+  const errorToastPromise = useRef<Promise<Toast> | null>(null);
   useEffect(() => {
     // Showing an empty list will prevent users from accessing actions and will be stuck
     // We progressively back off in order to not fetch unnecessary data
@@ -51,7 +53,7 @@ export function TransactionView() {
       }
 
       setTimeline(fallbackTimeline);
-      showToast({
+      errorToastPromise.current = showToast({
         style: Toast.Style.Failure,
         title: `No results for the past ${timeline}`,
         message: `Falling back to the last ${fallbackTimeline}`,
@@ -60,7 +62,13 @@ export function TransactionView() {
     }
 
     dispatch({ type: 'reset', initialCollection: transactions });
-    showToast({ style: Toast.Style.Success, title: `Showing transactions for the past ${timeline}` });
+
+    if (errorToastPromise.current) {
+      errorToastPromise.current.then((t) => setTimeout(() => t.hide(), 1500));
+      errorToastPromise.current = null;
+    } else {
+      showToast({ style: Toast.Style.Success, title: `Showing transactions for the past ${timeline}` });
+    }
   }, [timeline]);
 
   return (
