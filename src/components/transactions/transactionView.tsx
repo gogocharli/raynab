@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { List, showToast, ToastStyle } from '@raycast/api';
+import { List, showToast, Toast } from '@raycast/api';
 
 import { useSharedState } from '@lib/useSharedState';
 import { useTransactions } from '@lib/ynab';
@@ -33,14 +33,6 @@ export function TransactionView() {
     // This might cause problems for budgets with no transactions in the past year
     // TODO add a view for > 1 year, change to a different fallback model?
 
-    const showBackupToast = async (fallback: Period) => {
-      await showToast(
-        ToastStyle.Failure,
-        `No results for the past ${timeline}`,
-        `Falling back to the last ${fallback}`
-      );
-    };
-
     if (transactions.length == 0) {
       let fallbackTimeline: Period;
       switch (timeline) {
@@ -59,11 +51,16 @@ export function TransactionView() {
       }
 
       setTimeline(fallbackTimeline);
-      showBackupToast(fallbackTimeline);
+      showToast({
+        style: Toast.Style.Failure,
+        title: `No results for the past ${timeline}`,
+        message: `Falling back to the last ${fallbackTimeline}`,
+      });
       return;
     }
 
     dispatch({ type: 'reset', initialCollection: transactions });
+    showToast({ style: Toast.Style.Success, title: `Showing transactions for the past ${timeline}` });
   }, [timeline]);
 
   return (

@@ -1,6 +1,10 @@
 // import type {CategoryGroupWithCategories, } from 'ynab'
 import type { TransactionDetail as ynabTransactionDetail } from 'ynab';
 
+export interface Preferences {
+  apiToken: string;
+}
+
 export type TransactionDetail = ynabTransactionDetail;
 export type TransactionDetailMap = Map<string, Group<TransactionDetail>>;
 

@@ -1,6 +1,6 @@
-import { ActionPanel, CopyToClipboardAction, Detail } from '@raycast/api';
-import { type TransactionDetail } from "ynab";
-import dayjs from "dayjs";
+import { Action, ActionPanel, Detail } from '@raycast/api';
+import { type TransactionDetail } from 'ynab';
+import dayjs from 'dayjs';
 
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(localizedFormat);
@@ -21,7 +21,7 @@ export function TransactionDetails({ transaction }: { transaction: TransactionDe
       markdown={markdown}
       actions={
         <ActionPanel>
-          <CopyToClipboardAction title="Copy Transaction Amount" content="Dollar Billz" />
+          <Action.CopyToClipboard title="Copy Transaction Amount" content="Dollar Billz" />
         </ActionPanel>
       }
     />

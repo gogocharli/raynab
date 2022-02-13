@@ -1,4 +1,4 @@
-import { Icon, List, ActionPanel, Color, PushAction, OpenInBrowserAction } from '@raycast/api';
+import { Icon, List, ActionPanel, Color, Action } from '@raycast/api';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -29,7 +29,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
       actions={
         <ActionPanel title="Inspect Budget">
           <ActionPanel.Section>
-            <PushAction title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
+            <Action.Push title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
             <OpenInYnabAction />
           </ActionPanel.Section>
           <ActionPanel.Section>
@@ -65,9 +65,9 @@ function GroupBySubmenu({ onGroup, currentGroup }: { onGroup: onGroupType; curre
 
   return (
     <ActionPanel.Submenu title="Group by" shortcut={{ modifiers: ['cmd'], key: 'g' }}>
-      <ActionPanel.Item title="Category" icon={renderGroupIcon('category_name')} onAction={onGroup('category_name')} />
-      <ActionPanel.Item title="Payee" icon={renderGroupIcon('payee_name')} onAction={onGroup('payee_name')} />
-      <ActionPanel.Item title="Account" icon={renderGroupIcon('account_name')} onAction={onGroup('account_name')} />
+      <Action title="Category" icon={renderGroupIcon('category_name')} onAction={onGroup('category_name')} />
+      <Action title="Payee" icon={renderGroupIcon('payee_name')} onAction={onGroup('payee_name')} />
+      <Action title="Account" icon={renderGroupIcon('account_name')} onAction={onGroup('account_name')} />
     </ActionPanel.Submenu>
   );
 }
@@ -80,18 +80,10 @@ function SortBySubmenu({ onSort, currentSort }: { onSort: onSortType; currentSor
 
   return (
     <ActionPanel.Submenu title="Sort By" shortcut={{ modifiers: ['cmd'], key: 's' }}>
-      <ActionPanel.Item
-        title="Amount (Low to High)"
-        icon={renderSortIcon('amount_asc')}
-        onAction={onSort('amount_asc')}
-      />
-      <ActionPanel.Item
-        title="Amount (High to Low)"
-        icon={renderSortIcon('amount_desc')}
-        onAction={onSort('amount_desc')}
-      />
-      <ActionPanel.Item title="Date (Old to New)" icon={renderSortIcon('date_asc')} onAction={onSort('date_asc')} />
-      <ActionPanel.Item title="Date (New to Old)" icon={renderSortIcon('date_desc')} onAction={onSort('date_desc')} />
+      <Action title="Amount (Low to High)" icon={renderSortIcon('amount_asc')} onAction={onSort('amount_asc')} />
+      <Action title="Amount (High to Low)" icon={renderSortIcon('amount_desc')} onAction={onSort('amount_desc')} />
+      <Action title="Date (Old to New)" icon={renderSortIcon('date_asc')} onAction={onSort('date_asc')} />
+      <Action title="Date (New to Old)" icon={renderSortIcon('date_desc')} onAction={onSort('date_desc')} />
     </ActionPanel.Submenu>
   );
 }
@@ -110,19 +102,11 @@ function TimelineSubMenu({
 
   return (
     <ActionPanel.Submenu title="Timeline" shortcut={{ modifiers: ['cmd'], key: 't' }}>
-      <ActionPanel.Item title="Last Day" icon={renderTimelineIcon('day')} onAction={() => onTimelineChange('day')} />
-      <ActionPanel.Item title="Last Week" icon={renderTimelineIcon('week')} onAction={() => onTimelineChange('week')} />
-      <ActionPanel.Item
-        title="Last Month"
-        icon={renderTimelineIcon('month')}
-        onAction={() => onTimelineChange('month')}
-      />
-      <ActionPanel.Item
-        title="Last Quarter"
-        icon={renderTimelineIcon('quarter')}
-        onAction={() => onTimelineChange('quarter')}
-      />
-      <ActionPanel.Item title="Last Year" icon={renderTimelineIcon('year')} onAction={() => onTimelineChange('year')} />
+      <Action title="Last Day" icon={renderTimelineIcon('day')} onAction={() => onTimelineChange('day')} />
+      <Action title="Last Week" icon={renderTimelineIcon('week')} onAction={() => onTimelineChange('week')} />
+      <Action title="Last Month" icon={renderTimelineIcon('month')} onAction={() => onTimelineChange('month')} />
+      <Action title="Last Quarter" icon={renderTimelineIcon('quarter')} onAction={() => onTimelineChange('quarter')} />
+      <Action title="Last Year" icon={renderTimelineIcon('year')} onAction={() => onTimelineChange('year')} />
     </ActionPanel.Submenu>
   );
 }
@@ -149,7 +133,7 @@ function OpenInYnabAction(props: OpenInYnabActionProps) {
   };
 
   return (
-    <OpenInBrowserAction
+    <Action.OpenInBrowser
       title={`Open ${props.accounts ? `Account${props.accountId ? '' : 's'}` : 'Budget'} in YNAB`}
       url={constructUrl(activeBudgetId, props)}
     />

@@ -1,13 +1,15 @@
-import { preferences, showToast, ToastStyle } from '@raycast/api';
+import { getPreferenceValues, showToast, Toast } from '@raycast/api';
 import useSWR from 'swr';
 import * as ynab from 'ynab';
 import { displayError, isYnabError } from './errors';
 import dayjs, { type ManipulateType } from 'dayjs';
 
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
+import { Preferences } from '@srcTypes';
 dayjs.extend(quarterOfYear);
 
-const client = new ynab.API(preferences.apiToken.value as string);
+const { apiToken } = getPreferenceValues<Preferences>();
+const client = new ynab.API(apiToken);
 
 async function fetchBudgets() {
   try {
@@ -25,7 +27,7 @@ async function fetchBudgets() {
     }
 
     if (error instanceof Error) {
-      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
     }
 
     throw error;
@@ -44,7 +46,7 @@ async function fetchBudget(selectedBudgetId: string) {
     }
 
     if (error instanceof Error) {
-      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
     }
 
     throw error;
@@ -62,7 +64,7 @@ async function fetchCategoryGroups(selectedBudgetId: string) {
     }
 
     if (error instanceof Error) {
-      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
     }
 
     throw error;
@@ -80,7 +82,7 @@ async function fetchPayees(selectedBudgetId: string) {
     }
 
     if (error instanceof Error) {
-      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
     }
 
     throw error;
@@ -99,7 +101,7 @@ async function fetchAccounts(selectedBudgetId: string) {
     }
 
     if (error instanceof Error) {
-      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
     }
 
     throw error;
@@ -124,7 +126,7 @@ export async function fetchTransactions(selectedBudgetId: string, period: Manipu
     }
 
     if (error instanceof Error) {
-      showToast(ToastStyle.Failure, 'Something went wrong', error.message);
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
     }
 
     throw error;

@@ -11,7 +11,7 @@ import type {
   TransactionDetailMap,
 } from '@srcTypes';
 
-import { randomId } from '@raycast/api';
+import { nanoid as randomId } from 'nanoid';
 
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
   switch (action.type) {

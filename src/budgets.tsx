@@ -1,4 +1,4 @@
-import { Icon, List, ActionPanel, Color } from '@raycast/api';
+import { Icon, List, ActionPanel, Action, Color } from '@raycast/api';
 import { SWRConfig } from 'swr';
 
 import { cacheConfig } from '@lib/cache';
@@ -48,7 +48,7 @@ function BudgetItem({
       accessoryIcon={budget.id === selectedId ? { source: Icon.Checkmark, tintColor: Color.Green } : Icon.Circle}
       actions={
         <ActionPanel title="Inspect Budget">
-          <ActionPanel.Item title="Select Budget" onAction={onToggle} />
+          <Action title="Select Budget" onAction={onToggle} />
         </ActionPanel>
       }
     />
