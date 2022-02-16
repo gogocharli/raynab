@@ -19,6 +19,7 @@ export type sortOrder = 'asc' | 'desc';
 export type SortNames = `${SortTypes}_${sortOrder}`;
 
 export type Period = 'day' | 'week' | 'month' | 'quarter' | 'year';
+export type FlagColor = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple';
 
 export interface BudgetSummary {
   id: string;

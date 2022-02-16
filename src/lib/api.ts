@@ -4,7 +4,7 @@ import { displayError, isYnabError } from './errors';
 import dayjs from 'dayjs';
 
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
-import { Preferences, Period, BudgetSummary } from '@srcTypes';
+import { Preferences, Period, BudgetSummary, TransactionDetail } from '@srcTypes';
 dayjs.extend(quarterOfYear);
 
 const { apiToken } = getPreferenceValues<Preferences>();
@@ -122,6 +122,26 @@ export async function fetchTransactions(selectedBudgetId: string, period: Period
   } catch (error) {
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch transactions');
+    }
+
+    if (error instanceof Error) {
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
+    }
+
+    throw error;
+  }
+}
+
+export async function updateTransaction(selectedBudgetId: string, transactionId: string, data: TransactionDetail) {
+  try {
+    const updateResponse = await client.transactions.updateTransaction(selectedBudgetId, transactionId, {
+      transaction: data,
+    });
+    const updatedTransaction = updateResponse.data;
+    return updatedTransaction;
+  } catch (error) {
+    if (isYnabError(error)) {
+      displayError(error, 'Failed to fetch update transaction');
     }
 
     if (error instanceof Error) {

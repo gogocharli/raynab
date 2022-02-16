@@ -7,7 +7,7 @@ dayjs.extend(relativeTime);
 import { type TransactionDetail } from 'ynab';
 import { TransactionDetails } from './transactionDetails';
 import { useTransaction } from './transactionContext';
-import { formatPrice } from '@lib/utils';
+import { formatToReadablePrice } from '@lib/utils';
 import {
   OpenInYnabAction,
   GroupBySubmenu,
@@ -15,6 +15,7 @@ import {
   TimelineSubmenu,
   ToggleFlagsAction,
 } from '@components/actions';
+import { TransactionEditForm } from './transactionForm';
 
 const INFLOW_ICON = { source: Icon.ChevronUp, tintColor: Color.Green };
 const OUTFLOW_ICON = { source: Icon.ChevronDown, tintColor: Color.Red };
@@ -35,13 +36,14 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
       icon={mainIcon}
       id={transaction.id}
       title={transaction.payee_name ?? transaction.id}
-      subtitle={formatPrice(transaction.amount)}
+      subtitle={formatToReadablePrice(transaction.amount).toString()}
       accessoryIcon={showFlags ? { source: Icon.Dot, tintColor: getColor(transaction.flag_color) } : undefined}
       accessoryTitle={dayjs(transaction.date).fromNow()}
       actions={
         <ActionPanel title="Inspect Transaction">
           <ActionPanel.Section>
             <Action.Push title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
+            <Action.Push title="Edit Transaction" target={<TransactionEditForm transaction={transaction} />} />
             <OpenInYnabAction />
             <ToggleFlagsAction showFlags={showFlags} setShowFlags={setShowFlags} />
           </ActionPanel.Section>
