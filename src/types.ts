@@ -20,6 +20,11 @@ export type SortNames = `${SortTypes}_${sortOrder}`;
 
 export type Period = 'day' | 'week' | 'month' | 'quarter' | 'year';
 
+export interface BudgetSummary {
+  id: string;
+  name: string;
+  last_modified_on?: string | null;
+}
 export interface Group<T> {
   id: string;
   title: string;

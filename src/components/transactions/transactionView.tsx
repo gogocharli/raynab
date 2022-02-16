@@ -1,12 +1,12 @@
 import { useEffect, useReducer, useRef } from 'react';
 import { List, showToast, Toast } from '@raycast/api';
 
-import { useSharedState } from '@lib/useSharedState';
-import { useTransactions } from '@lib/ynab';
+import { useSharedState } from 'hooks/useSharedState';
 import { TransactionItem } from './transactionItem';
 import { initView, transactionViewReducer } from './viewReducer';
 import { TransactionProvider } from './transactionContext';
 import { type Period } from '@srcTypes';
+import { useTransactions } from '@hooks/useTransactions';
 
 export function TransactionView() {
   const [activeBudgetId] = useSharedState('activeBudgetId', '');

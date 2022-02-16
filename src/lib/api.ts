@@ -1,17 +1,16 @@
 import { getPreferenceValues, showToast, Toast } from '@raycast/api';
-import useSWR from 'swr';
 import * as ynab from 'ynab';
 import { displayError, isYnabError } from './errors';
-import dayjs, { type ManipulateType } from 'dayjs';
+import dayjs from 'dayjs';
 
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
-import { Preferences } from '@srcTypes';
+import { Preferences, Period, BudgetSummary } from '@srcTypes';
 dayjs.extend(quarterOfYear);
 
 const { apiToken } = getPreferenceValues<Preferences>();
 const client = new ynab.API(apiToken);
 
-async function fetchBudgets() {
+export async function fetchBudgets() {
   try {
     const budgetsResponse = await client.budgets.getBudgets();
     const budgets = budgetsResponse.data.budgets;
@@ -34,7 +33,7 @@ async function fetchBudgets() {
   }
 }
 
-async function fetchBudget(selectedBudgetId: string) {
+export async function fetchBudget(selectedBudgetId: string) {
   try {
     const budgetResponse = await client.budgets.getBudgetById(selectedBudgetId);
     const { categories, accounts, payees } = budgetResponse.data.budget;
@@ -53,7 +52,7 @@ async function fetchBudget(selectedBudgetId: string) {
   }
 }
 
-async function fetchCategoryGroups(selectedBudgetId: string) {
+export async function fetchCategoryGroups(selectedBudgetId: string) {
   try {
     const categoriesResponse = await client.categories.getCategories(selectedBudgetId);
     const categoryGroups = categoriesResponse.data.category_groups;
@@ -71,7 +70,7 @@ async function fetchCategoryGroups(selectedBudgetId: string) {
   }
 }
 
-async function fetchPayees(selectedBudgetId: string) {
+export async function fetchPayees(selectedBudgetId: string) {
   try {
     const payeesResponse = await client.payees.getPayees(selectedBudgetId);
     const payees = payeesResponse.data.payees;
@@ -89,7 +88,7 @@ async function fetchPayees(selectedBudgetId: string) {
   }
 }
 
-async function fetchAccounts(selectedBudgetId: string) {
+export async function fetchAccounts(selectedBudgetId: string) {
   try {
     const accountsResponse = await client.accounts.getAccounts(selectedBudgetId || 'last-used');
     const accounts = accountsResponse.data.accounts;
@@ -108,7 +107,7 @@ async function fetchAccounts(selectedBudgetId: string) {
   }
 }
 
-export async function fetchTransactions(selectedBudgetId: string, period: ManipulateType) {
+export async function fetchTransactions(selectedBudgetId: string, period: Period) {
   try {
     const transactionsResponse = await client.transactions.getTransactions(
       selectedBudgetId,
@@ -131,34 +130,4 @@ export async function fetchTransactions(selectedBudgetId: string, period: Manipu
 
     throw error;
   }
-}
-
-export function useBudgets() {
-  return useSWR('budgets', fetchBudgets);
-}
-
-export function useBudget(budgetId = 'last-used') {
-  return useSWR(budgetId, fetchBudget);
-}
-
-export function useTransactions(budgetId = 'last-used', period: ManipulateType) {
-  return useSWR([budgetId, period], fetchTransactions);
-}
-
-export function usePayees(budgetId = 'last-used') {
-  return useSWR(budgetId, fetchPayees);
-}
-
-export function useCategoryGroups(budgetId = 'last-used') {
-  return useSWR(budgetId, fetchCategoryGroups);
-}
-
-export function useAccounts(budgetId = 'last-used') {
-  return useSWR(budgetId, fetchAccounts);
-}
-
-export interface BudgetSummary {
-  id: string;
-  name: string;
-  last_modified_on?: string | null;
 }

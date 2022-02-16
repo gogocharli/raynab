@@ -2,8 +2,9 @@ import { Icon, List, ActionPanel, Action, Color } from '@raycast/api';
 import { SWRConfig } from 'swr';
 
 import { cacheConfig } from '@lib/cache';
-import { useSharedState } from '@lib/useSharedState';
-import { useBudgets, type BudgetSummary } from '@lib/ynab';
+import { useSharedState } from 'hooks/useSharedState';
+import { BudgetSummary } from '@srcTypes';
+import { useBudgets } from '@hooks/useBudgets';
 
 export default function Command() {
   return (

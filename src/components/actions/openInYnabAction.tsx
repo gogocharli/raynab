@@ -1,5 +1,5 @@
 import { Action } from '@raycast/api';
-import { useSharedState } from '@lib/useSharedState';
+import { useSharedState } from 'hooks/useSharedState';
 import { Shortcuts, URLs } from '@constants';
 
 interface OpenInYnabActionProps {

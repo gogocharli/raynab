@@ -18,7 +18,8 @@
       "@components/*": ["components/*"],
       "@lib/*": ["lib/*"],
       "@srcTypes": ["types"],
-      "@constants": ["constants"]
+      "@constants": ["constants"],
+      "@hooks/*": ["hooks/*"]
     }
   }
 }
