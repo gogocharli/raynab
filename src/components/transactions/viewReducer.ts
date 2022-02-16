@@ -142,20 +142,12 @@ function sortCollectionBy(sortOrder: SortNames) {
   const [key, order] = sortOrder.split('_') as [SortTypes, sortOrder];
 
   return function compareItems(firstEl: TransactionDetail, secondEl: TransactionDetail) {
-    let shouldSwitch;
     const left = key === 'date' ? new Date(firstEl[key]).getTime() : firstEl[key];
     const right = key === 'date' ? new Date(secondEl[key]).getTime() : secondEl[key];
 
-    if (right > left) {
-      // When two negative transactions are compared, use absolutes
-      shouldSwitch = right < 0 && left < 0 ? -1 : 1;
-    } else if (left > right) {
-      shouldSwitch = right < 0 && left < 0 ? 1 : -1;
-    } else {
-      return 0;
-    }
+    const sortOrderValue = right === left ? 0 : right > left ? 1 : -1;
 
-    return order === 'desc' ? shouldSwitch : -1 * shouldSwitch;
+    return order === 'desc' || sortOrderValue === 0 ? sortOrderValue : -1 * sortOrderValue;
   };
 }
 
