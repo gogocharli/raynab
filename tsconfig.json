@@ -17,7 +17,8 @@
     "paths": {
       "@components/*": ["components/*"],
       "@lib/*": ["lib/*"],
-      "@srcTypes": ["types"]
+      "@srcTypes": ["types"],
+      "@constants": ["constants"]
     }
   }
 }

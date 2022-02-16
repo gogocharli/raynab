@@ -10,6 +10,10 @@ import { useTransaction } from './transactionContext';
 import { formatPrice } from '@lib/utils';
 import { useSharedState } from '@lib/useSharedState';
 import { GroupNames, onGroupType, onSortType, onTimelineType, Period, SortNames } from '@srcTypes';
+import { Shortcuts, URLs } from '@constants';
+
+const INFLOW_ICON = { source: Icon.ChevronUp, tintColor: Color.Green };
+const OUTFLOW_ICON = { source: Icon.ChevronDown, tintColor: Color.Red };
 
 export function TransactionItem({ transaction }: { transaction: TransactionDetail }) {
   const {
@@ -20,10 +24,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
     flags: [showFlags, setShowFlags],
   } = useTransaction();
 
-  const mainIcon =
-    transaction.amount > 0
-      ? { source: Icon.ChevronUp, tintColor: Color.Green }
-      : { source: Icon.ChevronDown, tintColor: Color.Red };
+  const mainIcon = transaction.amount > 0 ? INFLOW_ICON : OUTFLOW_ICON;
 
   return (
     <List.Item
@@ -41,7 +42,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
             <Action
               title={`${showFlags ? 'Hide' : 'Show'} Flags`}
               onAction={() => setShowFlags((s) => !s)}
-              shortcut={{ modifiers: ['cmd'], key: 'f' }}
+              shortcut={Shortcuts.ToggleFlags}
             />
           </ActionPanel.Section>
           <ActionPanel.Section>
@@ -76,7 +77,7 @@ function GroupBySubmenu({ onGroup, currentGroup }: { onGroup: onGroupType; curre
   });
 
   return (
-    <ActionPanel.Submenu title="Group by" shortcut={{ modifiers: ['cmd'], key: 'g' }}>
+    <ActionPanel.Submenu title="Group by" shortcut={Shortcuts.Group}>
       <Action title="Category" icon={renderGroupIcon('category_name')} onAction={onGroup('category_name')} />
       <Action title="Payee" icon={renderGroupIcon('payee_name')} onAction={onGroup('payee_name')} />
       <Action title="Account" icon={renderGroupIcon('account_name')} onAction={onGroup('account_name')} />
@@ -91,7 +92,7 @@ function SortBySubmenu({ onSort, currentSort }: { onSort: onSortType; currentSor
   });
 
   return (
-    <ActionPanel.Submenu title="Sort By" shortcut={{ modifiers: ['cmd'], key: 's' }}>
+    <ActionPanel.Submenu title="Sort By" shortcut={Shortcuts.Sort}>
       <Action title="Amount (Low to High)" icon={renderSortIcon('amount_asc')} onAction={onSort('amount_asc')} />
       <Action title="Amount (High to Low)" icon={renderSortIcon('amount_desc')} onAction={onSort('amount_desc')} />
       <Action title="Date (Old to New)" icon={renderSortIcon('date_asc')} onAction={onSort('date_asc')} />
@@ -113,7 +114,7 @@ function TimelineSubMenu({
   });
 
   return (
-    <ActionPanel.Submenu title="Timeline" shortcut={{ modifiers: ['cmd'], key: 't' }}>
+    <ActionPanel.Submenu title="Timeline" shortcut={Shortcuts.Timeline}>
       <Action title="Last Day" icon={renderTimelineIcon('day')} onAction={() => onTimelineChange('day')} />
       <Action title="Last Week" icon={renderTimelineIcon('week')} onAction={() => onTimelineChange('week')} />
       <Action title="Last Month" icon={renderTimelineIcon('month')} onAction={() => onTimelineChange('month')} />
@@ -129,13 +130,11 @@ interface OpenInYnabActionProps {
   accountId?: string;
   yearMonth?: string;
 }
-
-const YNAB_URL = 'https://app.youneedabudget.com';
 function OpenInYnabAction(props: OpenInYnabActionProps) {
   const [activeBudgetId = ''] = useSharedState('activeBudgetId', '');
 
   const constructUrl = (budgetId: string, { accounts, accountId, yearMonth } = props) => {
-    const budgetPath = `${YNAB_URL}/${budgetId}/`;
+    const budgetPath = `${URLs.ynab}/${budgetId}/`;
 
     if (yearMonth) return budgetPath + yearMonth;
 
@@ -148,6 +147,7 @@ function OpenInYnabAction(props: OpenInYnabActionProps) {
     <Action.OpenInBrowser
       title={`Open ${props.accounts ? `Account${props.accountId ? '' : 's'}` : 'Budget'} in YNAB`}
       url={constructUrl(activeBudgetId, props)}
+      shortcut={Shortcuts.ViewInBrowser}
     />
   );
 }
