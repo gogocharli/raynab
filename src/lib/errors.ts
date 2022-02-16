@@ -1,4 +1,4 @@
-import { showToast, ToastStyle } from '@raycast/api';
+import { showToast, Toast } from '@raycast/api';
 import type { ErrorResponse } from 'ynab';
 
 export function isYnabError(error: unknown): error is ErrorResponse {
@@ -13,7 +13,7 @@ export function displayError(error: ErrorResponse, title?: string) {
   }
 
   const errorMessage = ErrorTable.get(apiError.id);
-  showToast(ToastStyle.Failure, title ?? apiError.name, errorMessage ?? apiError.detail);
+  showToast({ style: Toast.Style.Failure, title: title ?? apiError.name, message: errorMessage ?? apiError.detail });
   console.error(apiError, title);
 }
 
