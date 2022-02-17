@@ -15,12 +15,14 @@ export async function fetchBudgets() {
     const budgetsResponse = await client.budgets.getBudgets();
     const budgets = budgetsResponse.data.budgets;
 
-    const allBudgets: BudgetSummary[] = budgets.map(({ id, name, last_modified_on }) => {
-      return { id, name, last_modified_on };
+    const allBudgets: BudgetSummary[] = budgets.map(({ id, name, last_modified_on, currency_format }) => {
+      return { id, name, last_modified_on, currency_format };
     });
 
     return allBudgets;
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch budgets');
     }
@@ -40,6 +42,8 @@ export async function fetchBudget(selectedBudgetId: string) {
 
     return { categories, accounts, payees };
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch budget');
     }
@@ -58,6 +62,8 @@ export async function fetchCategoryGroups(selectedBudgetId: string) {
     const categoryGroups = categoriesResponse.data.category_groups;
     return categoryGroups;
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch categories');
     }
@@ -76,6 +82,8 @@ export async function fetchPayees(selectedBudgetId: string) {
     const payees = payeesResponse.data.payees;
     return payees;
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch payees');
     }
@@ -95,6 +103,8 @@ export async function fetchAccounts(selectedBudgetId: string) {
 
     return accounts;
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch accounts');
     }
@@ -120,6 +130,8 @@ export async function fetchTransactions(selectedBudgetId: string, period: Period
 
     return transactions;
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch transactions');
     }
@@ -140,6 +152,8 @@ export async function updateTransaction(selectedBudgetId: string, transactionId:
     const updatedTransaction = updateResponse.data;
     return updatedTransaction;
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch update transaction');
     }
@@ -166,6 +180,8 @@ export async function createTransaction(selectedBudgetId: string, transactionDat
 
     return createdTransaction;
   } catch (error) {
+    console.error(error);
+
     if (isYnabError(error)) {
       displayError(error, 'Failed to fetch update transaction');
     }
