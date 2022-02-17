@@ -2,9 +2,9 @@ import { Icon, List, ActionPanel, Action, Color } from '@raycast/api';
 import { SWRConfig } from 'swr';
 
 import { cacheConfig } from '@lib/cache';
-import { useSharedState } from 'hooks/useSharedState';
 import { BudgetSummary } from '@srcTypes';
 import { useBudgets } from '@hooks/useBudgets';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 export default function Command() {
   return (
@@ -17,7 +17,7 @@ export default function Command() {
 function BudgetList() {
   const { data: budgets, isValidating } = useBudgets();
 
-  const [activeBudgetId, setActiveBudgetId] = useSharedState('activeBudgetId', '');
+  const [activeBudgetId, setActiveBudgetId] = useLocalStorage('activeBudgetId', '');
 
   return (
     <List isLoading={isValidating}>
@@ -26,7 +26,7 @@ function BudgetList() {
           key={budget.id}
           budget={budget}
           selectedId={activeBudgetId ?? ''}
-          onToggle={() => setActiveBudgetId(budget?.id)}
+          onToggle={() => setActiveBudgetId(budget?.id ?? '')}
         />
       ))}
     </List>

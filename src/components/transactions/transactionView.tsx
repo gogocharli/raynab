@@ -7,9 +7,10 @@ import { initView, transactionViewReducer } from './viewReducer';
 import { TransactionProvider } from './transactionContext';
 import { type Period } from '@srcTypes';
 import { useTransactions } from '@hooks/useTransactions';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 export function TransactionView() {
-  const [activeBudgetId] = useSharedState('activeBudgetId', '');
+  const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
   const [timeline, setTimeline] = useSharedState<Period>('timeline', 'month');
   const { data: transactions = [], isValidating } = useTransactions(activeBudgetId, timeline ?? 'month');
 
