@@ -45,12 +45,12 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
             <Action.Push title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
             <Action.Push title="Edit Transaction" target={<TransactionEditForm transaction={transaction} />} />
             <OpenInYnabAction />
-            <ToggleFlagsAction showFlags={showFlags} setShowFlags={setShowFlags} />
           </ActionPanel.Section>
-          <ActionPanel.Section>
+          <ActionPanel.Section title="Modify List View">
             <GroupBySubmenu onGroup={onGroup} currentGroup={state.group} />
             <SortBySubmenu onSort={onSort} currentSort={state.sort} />
             <TimelineSubmenu onTimelineChange={onTimelineChange} currentTimeline={state.timeline ?? 'month'} />
+            <ToggleFlagsAction showFlags={showFlags} setShowFlags={setShowFlags} />
           </ActionPanel.Section>
         </ActionPanel>
       }

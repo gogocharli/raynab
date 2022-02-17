@@ -21,8 +21,6 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
 
   const { pop } = useNavigation();
 
-  // TODO sanitize flag color and other areas which might conflict
-  // TODO send actual request
   async function handleSubmit(values: Values) {
     const submittedValues = {
       ...transaction,
@@ -32,9 +30,9 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
       amount: formatToYnabPrice(amount),
       memo: values.memo || null,
     };
-    // Unfortunately a type enum problem I haven't found a solution for yet.
-
     const toast = await showToast({ style: Toast.Style.Animated, title: 'Updating Transaction' });
+
+    // @ts-expect-error Unfortunately a type enum problem I haven't found a solution for yet.
     updateTransaction('last-used', transaction.id, submittedValues).then(() => {
       toast.style = Toast.Style.Success;
       toast.title = 'Transaction updated successfully';
