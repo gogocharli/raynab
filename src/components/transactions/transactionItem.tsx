@@ -15,7 +15,7 @@ import {
   TimelineSubmenu,
   ToggleFlagsAction,
 } from '@components/actions';
-import { TransactionEditForm } from './transactionForm';
+import { TransactionEditForm } from './transactionEditForm';
 
 const INFLOW_ICON = { source: Icon.ChevronUp, tintColor: Color.Green };
 const OUTFLOW_ICON = { source: Icon.ChevronDown, tintColor: Color.Red };
