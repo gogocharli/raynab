@@ -1,7 +1,8 @@
 import { utils } from 'ynab';
 
 export function formatToReadablePrice(price: number) {
-  return utils.convertMilliUnitsToCurrencyAmount(price, 2);
+  const fmtPrice = utils.convertMilliUnitsToCurrencyAmount(price, 2);
+  return fmtPrice;
 }
 
 export function formatToYnabPrice(price: string | number) {

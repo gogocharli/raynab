@@ -16,13 +16,25 @@
     {
       "name": "transactions",
       "title": "List Transactions",
-      "description": "Lists transactions for the selected budget.",
+      "description": "List transactions for the selected budget.",
       "mode": "view"
     },
     {
       "name": "transaction",
       "title": "Create Transaction",
-      "description": "Create a new transaction.",
+      "description": "Create a new transaction in the selected budget.",
+      "mode": "view"
+    },
+    {
+      "name": "accounts",
+      "title": "List Accounts",
+      "description": "List accounts for the selected budget.",
+      "mode": "view"
+    },
+    {
+      "name": "budget",
+      "title": "View Active Budget",
+      "description": "View and Edit Active Budget Information for the current month.",
       "mode": "view"
     }
   ],
