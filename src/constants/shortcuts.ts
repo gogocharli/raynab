@@ -15,10 +15,10 @@ export const Shortcuts: Constants = {
     modifiers: ['cmd'],
     key: 'o',
   },
-  ToggleFlags: { modifiers: ['cmd'], key: 'f' },
+  ToggleFlags: { modifiers: ['opt'], key: 'f' },
   Group: { modifiers: ['cmd'], key: 'g' },
   Sort: { modifiers: ['cmd'], key: 's' },
   Timeline: { modifiers: ['cmd'], key: 't' },
-  Filter: { modifiers: ['opt'], key: 'f' },
+  Filter: { modifiers: ['cmd'], key: 'f' },
   Edit: { modifiers: ['cmd'], key: 'e' },
 };

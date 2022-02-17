@@ -44,16 +44,24 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
       actions={
         <ActionPanel title="Inspect Transaction">
           <ActionPanel.Section>
-            <Action.Push title="Show Transaction" target={<TransactionDetails transaction={transaction} />} />
-            <Action.Push title="Edit Transaction" target={<TransactionEditForm transaction={transaction} />} />
+            <Action.Push
+              title="Show Transaction"
+              icon={Icon.Eye}
+              target={<TransactionDetails transaction={transaction} />}
+            />
+            <Action.Push
+              title="Edit Transaction"
+              icon={Icon.Pencil}
+              target={<TransactionEditForm transaction={transaction} />}
+            />
             <OpenInYnabAction />
+            <ToggleFlagsAction showFlags={showFlags} setShowFlags={setShowFlags} />
           </ActionPanel.Section>
           <ActionPanel.Section title="Modify List View">
             <GroupBySubmenu onGroup={onGroup} currentGroup={state.group} />
             <SortBySubmenu onSort={onSort} currentSort={state.sort} />
             <TimelineSubmenu onTimelineChange={onTimelineChange} currentTimeline={state.timeline ?? 'month'} />
             <FilterBySubmenu onFilter={onFilter} currentFilter={state.filter} />
-            <ToggleFlagsAction showFlags={showFlags} setShowFlags={setShowFlags} />
           </ActionPanel.Section>
         </ActionPanel>
       }

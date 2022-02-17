@@ -1,4 +1,4 @@
-import { Action } from '@raycast/api';
+import { Action, Icon } from '@raycast/api';
 import { Shortcuts } from '@constants';
 
 export function ToggleFlagsAction({
@@ -10,6 +10,7 @@ export function ToggleFlagsAction({
 }) {
   return (
     <Action
+      icon={Icon.Binoculars}
       title={`${showFlags ? 'Hide' : 'Show'} Flags`}
       onAction={() => setShowFlags((s) => !s)}
       shortcut={Shortcuts.ToggleFlags}
