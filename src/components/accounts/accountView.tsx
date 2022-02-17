@@ -1,6 +1,7 @@
+import { OpenInYnabAction } from '@components/actions';
 import { useAccounts } from '@hooks/useAccounts';
 import { formatToReadablePrice } from '@lib/utils';
-import { Color, Icon, List } from '@raycast/api';
+import { ActionPanel, Color, Icon, List } from '@raycast/api';
 
 export function AccountView() {
   const { data: accounts, isValidating } = useAccounts();
@@ -21,6 +22,11 @@ export function AccountView() {
                 : Color.Green
               : Color.SecondaryText,
           }}
+          actions={
+            <ActionPanel>
+              <OpenInYnabAction accounts accountId={account.id} />
+            </ActionPanel>
+          }
         />
       ))}
     </List>
