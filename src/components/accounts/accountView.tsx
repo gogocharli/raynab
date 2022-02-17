@@ -1,10 +1,13 @@
 import { OpenInYnabAction } from '@components/actions';
 import { useAccounts } from '@hooks/useAccounts';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 import { formatToReadablePrice } from '@lib/utils';
 import { ActionPanel, Color, Icon, List } from '@raycast/api';
+import { CurrencyFormat } from '@srcTypes';
 
 export function AccountView() {
   const { data: accounts, isValidating } = useAccounts();
+  const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
 
   return (
     <List isLoading={isValidating}>
@@ -13,7 +16,9 @@ export function AccountView() {
           key={account.id}
           icon={{ source: Icon.Circle, tintColor: account.on_budget ? Color.Green : Color.Red }}
           title={account.name}
-          accessoryTitle={formatToReadablePrice(account.balance).toString()}
+          accessoryTitle={`${activeBudgetCurrency?.currency_symbol ?? '$'} ${formatToReadablePrice(
+            account.balance
+          ).toString()}`}
           accessoryIcon={{
             source: Icon.Link,
             tintColor: account.direct_import_linked

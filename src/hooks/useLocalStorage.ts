@@ -32,10 +32,14 @@ const useLocalStorage: UseLocalStorage = (
 ) => {
   const [state, setState] = useState(() => {
     const storedValue = localStorage.getItem(key);
-    if (storedValue) {
-      return deserialize(storedValue);
+    try {
+      if (storedValue) return deserialize(storedValue);
+
+      return typeof initalValue === 'function' ? initalValue() : initalValue;
+    } catch (error) {
+      console.error(error);
+      return initalValue;
     }
-    return typeof initalValue === 'function' ? initalValue() : initalValue;
   });
 
   const prevKeyRef = useRef(key);
@@ -48,10 +52,6 @@ const useLocalStorage: UseLocalStorage = (
 
     localStorage.setItem(key, serialize(state));
     prevKeyRef.current = key;
-
-    return () => {
-      localStorage.clear();
-    };
   }, [key, serialize, state]);
 
   return [state, setState];

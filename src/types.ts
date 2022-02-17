@@ -1,5 +1,8 @@
-// import type {CategoryGroupWithCategories, } from 'ynab'
-import type { TransactionDetail as ynabTransactionDetail, Account as ynabAccount } from 'ynab';
+import type {
+  TransactionDetail as ynabTransactionDetail,
+  Account as ynabAccount,
+  CurrencyFormat as ynabCurrencyFormat,
+} from 'ynab';
 
 export interface Preferences {
   apiToken: string;
@@ -23,10 +26,13 @@ export type SortNames = `${SortTypes}_${sortOrder}`;
 export type Period = 'day' | 'week' | 'month' | 'quarter' | 'year';
 export type FlagColor = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple';
 
+export type CurrencyFormat = ynabCurrencyFormat | null | undefined;
+
 export interface BudgetSummary {
   id: string;
   name: string;
   last_modified_on?: string | null;
+  currency_format: CurrencyFormat;
 }
 export interface Group<T> {
   id: string;

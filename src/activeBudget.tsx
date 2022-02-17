@@ -2,7 +2,7 @@ import { Icon, List, ActionPanel, Action, Color } from '@raycast/api';
 import { SWRConfig } from 'swr';
 
 import { cacheConfig } from '@lib/cache';
-import { BudgetSummary } from '@srcTypes';
+import { BudgetSummary, CurrencyFormat } from '@srcTypes';
 import { useBudgets } from '@hooks/useBudgets';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 
@@ -18,6 +18,7 @@ function BudgetList() {
   const { data: budgets, isValidating } = useBudgets();
 
   const [activeBudgetId, setActiveBudgetId] = useLocalStorage('activeBudgetId', '');
+  const [, setActiveBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
 
   return (
     <List isLoading={isValidating}>
@@ -26,7 +27,10 @@ function BudgetList() {
           key={budget.id}
           budget={budget}
           selectedId={activeBudgetId ?? ''}
-          onToggle={() => setActiveBudgetId(budget?.id ?? '')}
+          onToggle={() => {
+            setActiveBudgetId(budget?.id ?? '');
+            setActiveBudgetCurrency(budget.currency_format ?? null);
+          }}
         />
       ))}
     </List>
