@@ -8,15 +8,21 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "budgets",
+      "name": "activeBudget",
       "title": "Select Active Budget",
-      "description": "Lists your active budgets from YNAB.",
+      "description": "Select an active budget to use across Raynab.",
       "mode": "view"
     },
     {
       "name": "transactions",
       "title": "List Transactions",
       "description": "Lists transactions for the selected budget.",
+      "mode": "view"
+    },
+    {
+      "name": "transaction",
+      "title": "Create Transaction",
+      "description": "Create a new transaction.",
       "mode": "view"
     }
   ],
