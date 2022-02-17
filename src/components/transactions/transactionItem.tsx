@@ -16,6 +16,7 @@ import {
   ToggleFlagsAction,
 } from '@components/actions';
 import { TransactionEditForm } from './transactionEditForm';
+import { FilterBySubmenu } from '@components/actions/filterBySubmenu';
 
 const INFLOW_ICON = { source: Icon.ChevronUp, tintColor: Color.Green };
 const OUTFLOW_ICON = { source: Icon.ChevronDown, tintColor: Color.Red };
@@ -24,6 +25,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
   const {
     onGroup,
     onSort,
+    onFilter,
     onTimelineChange,
     state,
     flags: [showFlags, setShowFlags],
@@ -50,6 +52,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
             <GroupBySubmenu onGroup={onGroup} currentGroup={state.group} />
             <SortBySubmenu onSort={onSort} currentSort={state.sort} />
             <TimelineSubmenu onTimelineChange={onTimelineChange} currentTimeline={state.timeline ?? 'month'} />
+            <FilterBySubmenu onFilter={onFilter} currentFilter={state.filter} />
             <ToggleFlagsAction showFlags={showFlags} setShowFlags={setShowFlags} />
           </ActionPanel.Section>
         </ActionPanel>

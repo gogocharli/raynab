@@ -63,11 +63,9 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
       }
 
       const filteredCollection = Array.isArray(collection)
-        ? initialCollection.filter((item) => item[newFilter.key] === newFilter.value)
+        ? initialCollection.filter(filterCollectionBy(newFilter))
         : // TODO improve performance. Most .reduce calls could be replaced by for loops
-          initialCollection
-            .filter((item) => item[newFilter.key] === newFilter.value)
-            .reduce(groupToMap(group), new Map());
+          initialCollection.filter(filterCollectionBy(newFilter)).reduce(groupToMap(group), new Map());
 
       return {
         ...state,
@@ -151,19 +149,31 @@ function sortCollectionBy(sortOrder: SortNames) {
   };
 }
 
+function filterCollectionBy(newFilter: Filter) {
+  return (item: TransactionDetail) => {
+    if (!newFilter) return true;
+
+    if (newFilter.key === 'amount') {
+      if (newFilter.value == 'inflow') return item.amount >= 0;
+      else if (newFilter.value == 'outflow') return item.amount < 0;
+    }
+
+    return item[newFilter.key] === newFilter.value;
+  };
+}
+
 function isSameFilter(filterA: Filter, filterB: Filter) {
   if (!filterA && filterB) return false;
 
   if (filterA && !filterB) return false;
 
-  if (filterA && filterB) {
-    if (!filterA?.key && !filterB?.key) return false;
+  let isSameObject = false;
 
-    for (const [key, value] of Object.entries(filterA)) {
-      if (key === filterB.key && value === filterB.value) continue;
-      return false;
-    }
+  if (filterA && filterB) {
+    if (!filterA?.key && !filterB?.key) isSameObject = false;
+
+    isSameObject = filterA.key === filterB.key && filterA.value === filterB.value;
   }
 
-  return true;
+  return isSameObject;
 }

@@ -6,6 +6,7 @@ interface Constants {
   Group: Keyboard.Shortcut;
   Sort: Keyboard.Shortcut;
   Timeline: Keyboard.Shortcut;
+  Filter: Keyboard.Shortcut;
   Edit: Keyboard.Shortcut;
 }
 
@@ -18,5 +19,6 @@ export const Shortcuts: Constants = {
   Group: { modifiers: ['cmd'], key: 'g' },
   Sort: { modifiers: ['cmd'], key: 's' },
   Timeline: { modifiers: ['cmd'], key: 't' },
+  Filter: { modifiers: ['opt'], key: 'f' },
   Edit: { modifiers: ['cmd'], key: 'e' },
 };
