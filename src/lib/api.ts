@@ -152,7 +152,9 @@ export async function updateTransaction(selectedBudgetId: string, transactionId:
   }
 }
 
-export async function createTransaction(selectedBudgetId: string, transactionData: TransactionDetail) {
+type TransactionCreation = Omit<TransactionDetail, 'account_name' | 'id' | 'deleted' | 'subtransactions'>;
+
+export async function createTransaction(selectedBudgetId: string, transactionData: TransactionCreation) {
   try {
     const transactionCreationResponse = await client.transactions.createTransaction(selectedBudgetId, {
       transaction: transactionData,
