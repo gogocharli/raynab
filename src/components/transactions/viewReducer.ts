@@ -20,7 +20,7 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
       return {
         filter: null,
         group: null,
-        sort: null,
+        sort: 'date_desc',
         collection: initialItems,
         initialCollection: initialItems,
       };
@@ -84,7 +84,7 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
         return {
           ...state,
           collection,
-          sort: null,
+          sort: 'date_desc',
         };
       }
 
