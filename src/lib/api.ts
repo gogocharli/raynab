@@ -151,3 +151,27 @@ export async function updateTransaction(selectedBudgetId: string, transactionId:
     throw error;
   }
 }
+
+export async function createTransaction(selectedBudgetId: string, transactionData: TransactionDetail) {
+  try {
+    const transactionCreationResponse = await client.transactions.createTransaction(selectedBudgetId, {
+      transaction: transactionData,
+    });
+
+    if (transactionCreationResponse.data.duplicate_import_ids) throw `Transcation already exists`;
+
+    const createdTransaction = transactionCreationResponse.data.transaction;
+
+    return createdTransaction;
+  } catch (error) {
+    if (isYnabError(error)) {
+      displayError(error, 'Failed to fetch update transaction');
+    }
+
+    if (error instanceof Error) {
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
+    }
+
+    throw error;
+  }
+}
