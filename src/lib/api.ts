@@ -38,9 +38,9 @@ export async function fetchBudgets() {
 export async function fetchBudget(selectedBudgetId: string) {
   try {
     const budgetResponse = await client.budgets.getBudgetById(selectedBudgetId);
-    const { categories, accounts, payees } = budgetResponse.data.budget;
+    const { months, currency_format } = budgetResponse.data.budget;
 
-    return { categories, accounts, payees };
+    return { months, currency_format };
   } catch (error) {
     console.error(error);
 
