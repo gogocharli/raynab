@@ -16,7 +16,7 @@ interface Values {
 }
 
 export function TransactionEditForm({ transaction }: { transaction: TransactionDetail }) {
-  const [amount, setAmount] = useState(formatToReadablePrice(transaction.amount).toString());
+  const [amount, setAmount] = useState(formatToReadablePrice(transaction.amount, false));
   const { data: payees } = usePayees();
 
   async function handleSubmit(values: Values) {

@@ -10,8 +10,6 @@ export function BudgetView() {
   const { data: budget, isValidating: isLoadingBudget } = useBudget(activeBudgetId);
   const { data: categoryGroups, isValidating: isLoadingCategories } = useCategoryGroups(activeBudgetId);
 
-  const currentMonth = budget?.months?.at(0);
-
   return (
     <List
       isLoading={isLoadingBudget || isLoadingCategories}

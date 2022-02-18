@@ -38,7 +38,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
       icon={mainIcon}
       id={transaction.id}
       title={transaction.payee_name ?? transaction.id}
-      subtitle={formatToReadablePrice(transaction.amount).toString()}
+      subtitle={formatToReadablePrice(transaction.amount)}
       accessoryIcon={showFlags ? { source: Icon.Dot, tintColor: getColor(transaction.flag_color) } : undefined}
       accessoryTitle={dayjs(transaction.date).fromNow()}
       actions={
