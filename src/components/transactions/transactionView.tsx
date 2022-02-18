@@ -70,7 +70,7 @@ export function TransactionView() {
     } else {
       showToast({ style: Toast.Style.Success, title: `Showing transactions for the past ${timeline}` });
     }
-  }, [timeline]);
+  }, [timeline, transactions]);
 
   return (
     <TransactionProvider dispatch={dispatch} state={{ group, sort, filter, timeline }} onTimelineChange={setTimeline}>
