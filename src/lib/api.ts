@@ -146,7 +146,7 @@ export async function fetchTransactions(selectedBudgetId: string, period: Period
 
 export async function updateTransaction(selectedBudgetId: string, transactionId: string, data: TransactionDetail) {
   try {
-    const updateResponse = await client.transactions.updateTransaction(selectedBudgetId, transactionId, {
+    const updateResponse = await client.transactions.updateTransaction(selectedBudgetId || 'last-used', transactionId, {
       transaction: data,
     });
     const updatedTransaction = updateResponse.data;
@@ -170,7 +170,7 @@ type TransactionCreation = Omit<TransactionDetail, 'account_name' | 'id' | 'dele
 
 export async function createTransaction(selectedBudgetId: string, transactionData: TransactionCreation) {
   try {
-    const transactionCreationResponse = await client.transactions.createTransaction(selectedBudgetId, {
+    const transactionCreationResponse = await client.transactions.createTransaction(selectedBudgetId || 'last-used', {
       transaction: transactionData,
     });
 
@@ -196,9 +196,14 @@ export async function createTransaction(selectedBudgetId: string, transactionDat
 
 export async function updateCategory(selectedBudgetId: string, categoryId: string, data: { budgeted: number }) {
   try {
-    const updateResponse = await client.categories.updateMonthCategory(selectedBudgetId, 'current', categoryId, {
-      category: data,
-    });
+    const updateResponse = await client.categories.updateMonthCategory(
+      selectedBudgetId || 'last-used',
+      'current',
+      categoryId,
+      {
+        category: data,
+      }
+    );
     const updatedCategory = updateResponse.data;
     return updatedCategory;
   } catch (error) {
