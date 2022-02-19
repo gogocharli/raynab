@@ -1,8 +1,9 @@
 import { OpenInYnabAction } from '@components/actions';
+import { TransactionCreationForm } from '@components/transactions/transactionCreationForm';
 import { useAccounts } from '@hooks/useAccounts';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { formatToReadablePrice } from '@lib/utils';
-import { ActionPanel, Color, Icon, List } from '@raycast/api';
+import { Action, ActionPanel, Color, Icon, List } from '@raycast/api';
 import { CurrencyFormat } from '@srcTypes';
 
 export function AccountView() {
@@ -27,6 +28,12 @@ export function AccountView() {
           }}
           actions={
             <ActionPanel>
+              <Action.Push
+                title="Create New Transaction"
+                icon={Icon.Plus}
+                target={<TransactionCreationForm accountId={account.id} />}
+                shortcut={{ modifiers: ['cmd'], key: 'c' }}
+              />
               <OpenInYnabAction accounts accountId={account.id} />
             </ActionPanel>
           }

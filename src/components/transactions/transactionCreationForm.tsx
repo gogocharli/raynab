@@ -35,11 +35,11 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
 
     const requestData = createTransactionData(values);
 
-    const toast = await showToast({ style: Toast.Style.Animated, title: 'Updating Transaction' });
+    const toast = await showToast({ style: Toast.Style.Animated, title: 'Creating Transaction' });
 
     createTransaction(activeBudgetId, requestData).then(() => {
       toast.style = Toast.Style.Success;
-      toast.title = 'Transaction updated successfully';
+      toast.title = 'Transaction created successfully';
     });
   }
 
