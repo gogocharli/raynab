@@ -59,6 +59,7 @@ export type onTimelineType = (period: Period) => void;
 
 export interface ViewState {
   filter: Filter;
+  search: string;
   group: GroupNames | null;
   sort: SortNames | null;
   collection: TransactionDetail[] | TransactionDetailMap;
@@ -71,6 +72,7 @@ export type ViewAction =
       type: 'filter';
       filterBy: Filter;
     }
+  | { type: 'search'; query: string }
   | { type: 'group'; groupBy: GroupNames }
   | { type: 'sort'; sortBy: SortNames };
 

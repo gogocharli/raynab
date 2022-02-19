@@ -17,7 +17,7 @@ type TransactionContextReturnValues = {
   onFilter: onFilterType;
   onSort: onSortType;
   onTimelineChange: onTimelineType;
-  state: TransactionState;
+  state: Omit<TransactionState, 'search'>;
   flags: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 const TransactionContext = createContext<TransactionContextReturnValues | null>(null);
@@ -29,7 +29,7 @@ export function TransactionProvider({
   children,
 }: {
   dispatch: React.Dispatch<ViewAction>;
-  state: TransactionState;
+  state: Omit<TransactionState, 'search'>;
   onTimelineChange: onTimelineType;
   children: ReactNode;
 }) {

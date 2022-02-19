@@ -21,6 +21,7 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
         filter: null,
         group: null,
         sort: 'date_desc',
+        search: '',
         collection: initialItems,
         initialCollection: initialItems,
       };
@@ -93,6 +94,10 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
 
       return { ...state, sort: newSort, collection: sortedCollection };
     }
+    case 'search': {
+      console.log(action);
+      return state;
+    }
     default:
       //@ts-expect-error action type does not exist
       throw new Error(`Invalid action type "${action.type}" in transactionViewReducer`);
@@ -103,12 +108,14 @@ export function initView({
   filter = null,
   group = null,
   sort = null,
+  search = '',
   initialCollection: initialItems,
 }: ViewState): ViewState {
   return {
     filter,
     group,
     sort,
+    search,
     collection: initialItems,
     initialCollection: initialItems,
   };

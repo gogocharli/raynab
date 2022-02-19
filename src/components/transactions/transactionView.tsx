@@ -20,6 +20,7 @@ export function TransactionView() {
       filter: null,
       group: null,
       sort: 'date_desc',
+      search: '',
       collection: transactions,
       initialCollection: transactions,
     },
@@ -74,7 +75,12 @@ export function TransactionView() {
 
   return (
     <TransactionProvider dispatch={dispatch} state={{ group, sort, filter, timeline }} onTimelineChange={setTimeline}>
-      <List isLoading={isValidating} searchBarPlaceholder={`Search transactions in the last ${timeline}`}>
+      <List
+        isLoading={isValidating}
+        searchBarPlaceholder={`Search transactions in the last ${timeline}`}
+        onSearchTextChange={(query) => dispatch({ type: 'search', query })}
+        throttle
+      >
         {!Array.isArray(collection)
           ? Array.from(collection).map(([, group]) => (
               <List.Section
