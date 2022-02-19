@@ -4,6 +4,7 @@ import type {
   CurrencyFormat as ynabCurrencyFormat,
   Category as ynabCategory,
   CategoryGroupWithCategories as ynabCategoryGroupWithCategories,
+  BudgetDetail as ynabBudgetDetail,
 } from 'ynab';
 
 export interface Preferences {
@@ -16,6 +17,8 @@ export type TransactionDetailMap = Map<string, Group<TransactionDetail>>;
 export type Account = ynabAccount;
 export type Category = ynabCategory;
 export type CategoryGroupWithCategories = ynabCategoryGroupWithCategories;
+export type BudgetDetail = ynabBudgetDetail;
+export type BudgetDetailSummary = Pick<BudgetDetail, 'months' | 'currency_format'>;
 
 export type GroupTypes = 'category' | 'payee' | 'account';
 export type GroupNames = `${GroupTypes}_name`;

@@ -1,9 +1,8 @@
 import { ActionPanel, Detail } from '@raycast/api';
 import { OpenInYnabAction } from '@components/actions';
 import { useLocalStorage } from '@hooks/useLocalStorage';
-import { CurrencyFormat } from '@srcTypes';
+import { CurrencyFormat, Category } from '@srcTypes';
 import { formatToReadablePrice } from '@lib/utils';
-import { Category } from 'ynab';
 
 export function CategoryDetails({ category }: { category: Category }) {
   const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);

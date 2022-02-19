@@ -3,15 +3,18 @@ import { TransactionCreationForm } from '@components/transactions/transactionCre
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { formatToReadablePrice } from '@lib/utils';
 import { Action, ActionPanel, Icon, List } from '@raycast/api';
-import { CurrencyFormat, Category, CategoryGroupWithCategories } from '@srcTypes';
+import { CurrencyFormat, Category, CategoryGroupWithCategories, BudgetDetailSummary } from '@srcTypes';
 import { useState } from 'react';
+import { BudgetDetails } from './budgetDetails';
 import { CategoryDetails } from './categoryDetails';
 import { CategoryEditForm } from './categoryEditForm';
 
 export function CategoryGroupSection({
   categoryGroups,
+  budget,
 }: {
   categoryGroups: CategoryGroupWithCategories[] | undefined;
+  budget: BudgetDetailSummary | undefined;
 }) {
   const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
   const [showProgress, setshowProgress] = useState(false);
@@ -47,13 +50,9 @@ export function CategoryGroupSection({
                         target={<CategoryDetails category={category} />}
                       />
                       <Action.Push
-                        title="Show Budget"
+                        title="Show Monthly Budget"
                         icon={Icon.Envelope}
-                        target={
-                          {
-                            /*  */
-                          }
-                        }
+                        target={<BudgetDetails budget={budget} />}
                       />
                       <OpenInYnabAction />
                       <Action
