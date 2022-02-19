@@ -1,4 +1,5 @@
 import { OpenInYnabAction } from '@components/actions';
+import { TransactionCreationForm } from '@components/transactions/transactionCreationForm';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { formatToReadablePrice } from '@lib/utils';
 import { Action, ActionPanel, Icon, List } from '@raycast/api';
@@ -38,24 +39,44 @@ export function CategoryGroupSection({
                     : renderDefaultTitle(category, activeBudgetCurrency?.currency_symbol)
                 }
                 actions={
-                  <ActionPanel>
-                    <Action.Push
-                      title="Show Category"
-                      icon={Icon.Eye}
-                      target={<CategoryDetails category={category} />}
-                    />
-                    <Action.Push
-                      title="Edit Category"
-                      icon={Icon.Pencil}
-                      target={<CategoryEditForm category={category} />}
-                    />
-                    <OpenInYnabAction />
-                    <Action
-                      icon={Icon.Binoculars}
-                      title={`${showProgress ? 'Hide' : 'Show'} Progress`}
-                      onAction={() => setshowProgress((s) => !s)}
-                      shortcut={{ modifiers: ['cmd'], key: 'p' }}
-                    />
+                  <ActionPanel title="Inspect">
+                    <ActionPanel.Section>
+                      <Action.Push
+                        title="Show Category"
+                        icon={Icon.Eye}
+                        target={<CategoryDetails category={category} />}
+                      />
+                      <Action.Push
+                        title="Show Budget"
+                        icon={Icon.Envelope}
+                        target={
+                          {
+                            /*  */
+                          }
+                        }
+                      />
+                      <OpenInYnabAction />
+                      <Action
+                        icon={Icon.Binoculars}
+                        title={`${showProgress ? 'Hide' : 'Show'} Progress`}
+                        onAction={() => setshowProgress((s) => !s)}
+                        shortcut={{ modifiers: ['cmd'], key: 'p' }}
+                      />
+                    </ActionPanel.Section>
+                    <ActionPanel.Section title="Modify">
+                      <Action.Push
+                        title="Edit Category"
+                        icon={Icon.Pencil}
+                        target={<CategoryEditForm category={category} />}
+                        shortcut={{ modifiers: ['cmd'], key: 'e' }}
+                      />
+                      <Action.Push
+                        title="Create New Transaction"
+                        icon={Icon.Plus}
+                        target={<TransactionCreationForm categoryId={category.id} />}
+                        shortcut={{ modifiers: ['cmd'], key: 'c' }}
+                      />
+                    </ActionPanel.Section>
                   </ActionPanel>
                 }
               />
