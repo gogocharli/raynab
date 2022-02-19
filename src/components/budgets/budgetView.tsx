@@ -1,4 +1,3 @@
-import { OpenInYnabAction } from '@components/actions';
 import { useCategoryGroups } from '@hooks/useCategoryGroups';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { getCurrentMonth } from '@lib/utils';

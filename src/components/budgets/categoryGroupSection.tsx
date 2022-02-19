@@ -2,9 +2,9 @@ import { OpenInYnabAction } from '@components/actions';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { formatToReadablePrice } from '@lib/utils';
 import { Action, ActionPanel, Icon, List } from '@raycast/api';
-import { CurrencyFormat } from '@srcTypes';
+import { CurrencyFormat, Category, CategoryGroupWithCategories } from '@srcTypes';
 import { useState } from 'react';
-import type { Category, CategoryGroupWithCategories } from 'ynab';
+import { CategoryDetails } from './categoryDetails';
 
 export function CategoryGroupSection({
   categoryGroups,
@@ -41,11 +41,7 @@ export function CategoryGroupSection({
                     <Action.Push
                       title="Show Category"
                       icon={Icon.Eye}
-                      target={
-                        {
-                          /* <TransactionDetails transaction={transaction} /> */
-                        }
-                      }
+                      target={<CategoryDetails category={category} />}
                     />
                     <Action.Push
                       title="Edit Category"

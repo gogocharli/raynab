@@ -7,6 +7,7 @@ dayjs.extend(localizedFormat);
 
 import { formatToReadablePrice } from '@lib/utils';
 import { useLocalStorage } from '@hooks/useLocalStorage';
+import { OpenInYnabAction } from '@components/actions';
 
 export function TransactionDetails({ transaction }: { transaction: TransactionDetail }) {
   const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
@@ -24,7 +25,8 @@ export function TransactionDetails({ transaction }: { transaction: TransactionDe
       markdown={markdown}
       actions={
         <ActionPanel>
-          <Action.CopyToClipboard title="Copy Transaction Amount" content="Dollar Billz" />
+          <Action.CopyToClipboard title="Copy Transaction Amount" content={formatToReadablePrice(transaction.amount)} />
+          <OpenInYnabAction />
         </ActionPanel>
       }
     />
