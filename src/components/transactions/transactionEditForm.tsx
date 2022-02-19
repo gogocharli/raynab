@@ -1,11 +1,12 @@
 import { formatToReadablePrice, formatToYnabPrice } from '@lib/utils';
 import { ActionPanel, Action, Form, Icon, Color, showToast, Toast } from '@raycast/api';
-import { TransactionDetail } from '@srcTypes';
+import { CurrencyFormat, TransactionDetail } from '@srcTypes';
 import { useState } from 'react';
 import { updateTransaction } from '@lib/api';
 
 import { SaveTransaction } from 'ynab';
 import { usePayees } from '@hooks/usePayees';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 interface Values {
   date: Date;
@@ -17,7 +18,12 @@ interface Values {
 
 export function TransactionEditForm({ transaction }: { transaction: TransactionDetail }) {
   const [amount, setAmount] = useState(formatToReadablePrice(transaction.amount, false));
+  const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
+
   const { data: payees } = usePayees();
+
+  const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
+  const currencySymbol = activeBudgetCurrency?.currency_symbol;
 
   async function handleSubmit(values: Values) {
     if (!isValidFormSubmission(values)) return;
@@ -32,7 +38,7 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
     };
     const toast = await showToast({ style: Toast.Style.Animated, title: 'Updating Transaction' });
 
-    updateTransaction('last-used', transaction.id, submittedValues).then(() => {
+    updateTransaction(activeBudgetId, transaction.id, submittedValues).then(() => {
       toast.style = Toast.Style.Success;
       toast.title = 'Transaction updated successfully';
     });
@@ -48,16 +54,21 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
     >
       <Form.Description
         title="Edit Transaction"
-        text="Change one or more of the following fields to update the transaction."
+        text="Change one or more of the following fields to update the transaction. Amount can be positive or negative."
       />
       <Form.DatePicker id="date" title="Date of Transaction" defaultValue={new Date(transaction.date)} />
-      <Form.TextField id="amount" title="Amount" value={amount} onChange={setAmount} />
+      <Form.TextField
+        id="amount"
+        title={`Amount ${currencySymbol ? `(${currencySymbol})` : ''}`}
+        value={amount}
+        onChange={setAmount}
+      />
       <Form.Dropdown id="payee_id" title="Payee" defaultValue={transaction.payee_id ?? undefined}>
         {payees?.map((payee) => (
           <Form.Dropdown.Item key={payee.id} value={payee.id} title={payee.name} />
         ))}
       </Form.Dropdown>
-      <Form.TextArea id="memo" defaultValue={transaction.memo ?? ''} />
+      <Form.TextArea id="memo" defaultValue={transaction.memo ?? ''} placeholder="Enter additional information…" />
       <Form.Dropdown id="flag_color" title="Flag Color" defaultValue="">
         <Form.Dropdown.Item value="" title="No Flag" icon={{ source: Icon.Dot }} />
         <Form.Dropdown.Item value="red" title="Red" icon={{ source: Icon.Dot, tintColor: Color.Red }} />

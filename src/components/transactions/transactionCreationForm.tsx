@@ -7,6 +7,8 @@ import { useCategoryGroups } from '@hooks/useCategoryGroups';
 import { nanoid as random } from 'nanoid';
 
 import { SaveTransaction } from 'ynab';
+import { useLocalStorage } from '@hooks/useLocalStorage';
+import { CurrencyFormat } from '@srcTypes';
 interface Values {
   date: Date;
   account_id: string;
@@ -21,11 +23,12 @@ interface Values {
 export function TransactionCreationForm({ categoryId, accountId }: { categoryId?: string; accountId?: string }) {
   const [date, setDate] = useState(new Date());
   const [payee, setPayee] = useState('');
-  const [memo, setMemo] = useState('');
   const [cleared, setCleared] = useState(false);
 
   const { data: accounts = [] } = useAccounts();
   const { data: categoryGroups } = useCategoryGroups();
+
+  const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
 
   async function handleSubmit(values: Values) {
     if (!isValidFormSubmission(values)) return;
@@ -34,11 +37,14 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
 
     const toast = await showToast({ style: Toast.Style.Animated, title: 'Updating Transaction' });
 
-    createTransaction('last-used', requestData).then(() => {
+    createTransaction(activeBudgetId, requestData).then(() => {
       toast.style = Toast.Style.Success;
       toast.title = 'Transaction updated successfully';
     });
   }
+
+  const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
+  const currencySymbol = activeBudgetCurrency?.currency_symbol;
 
   return (
     <Form
@@ -53,7 +59,7 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
         text="Change one or more of the following fields to update the transaction."
       />
       <Form.DatePicker id="date" title="Date of Transaction" value={date} onChange={setDate} />
-      <Form.TextField id="amount" title="Amount" defaultValue="0" />
+      <Form.TextField id="amount" title={`Amount ${currencySymbol ? `(${currencySymbol})` : ''}`} defaultValue="0" />
       <Form.TextField id="payee_name" title="Payee Name" value={payee} onChange={setPayee} />
       <Form.Dropdown id="account_id" title="Account" defaultValue={accountId}>
         {accounts.map((account) => (
@@ -69,7 +75,7 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
       </Form.Dropdown>
       <Form.Separator />
       <Form.Checkbox id="cleared" label="Has the transaction cleared?" value={cleared} onChange={setCleared} />
-      <Form.TextArea id="memo" title="Memo" value={memo} onChange={setMemo} />
+      <Form.TextArea id="memo" title="Memo" placeholder="Enter additional information…" />
 
       <Form.Dropdown id="flag_color" title="Flag Color" defaultValue="">
         <Form.Dropdown.Item value="" title="No Flag" icon={{ source: Icon.Dot }} />
