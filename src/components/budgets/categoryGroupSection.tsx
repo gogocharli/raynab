@@ -5,6 +5,7 @@ import { Action, ActionPanel, Icon, List } from '@raycast/api';
 import { CurrencyFormat, Category, CategoryGroupWithCategories } from '@srcTypes';
 import { useState } from 'react';
 import { CategoryDetails } from './categoryDetails';
+import { CategoryEditForm } from './categoryEditForm';
 
 export function CategoryGroupSection({
   categoryGroups,
@@ -46,11 +47,7 @@ export function CategoryGroupSection({
                     <Action.Push
                       title="Edit Category"
                       icon={Icon.Pencil}
-                      target={
-                        {
-                          /* <TransactionEditForm transaction={transaction} /> */
-                        }
-                      }
+                      target={<CategoryEditForm category={category} />}
                     />
                     <OpenInYnabAction />
                     <Action

@@ -193,3 +193,25 @@ export async function createTransaction(selectedBudgetId: string, transactionDat
     throw error;
   }
 }
+
+export async function updateCategory(selectedBudgetId: string, categoryId: string, data: { budgeted: number }) {
+  try {
+    const updateResponse = await client.categories.updateMonthCategory(selectedBudgetId, 'current', categoryId, {
+      category: data,
+    });
+    const updatedCategory = updateResponse.data;
+    return updatedCategory;
+  } catch (error) {
+    console.error(error);
+
+    if (isYnabError(error)) {
+      displayError(error, 'Failed to fetch update transaction');
+    }
+
+    if (error instanceof Error) {
+      showToast({ style: Toast.Style.Failure, title: 'Something went wrong', message: error.message });
+    }
+
+    throw error;
+  }
+}
