@@ -7,7 +7,8 @@ import { Action, ActionPanel, Color, Icon, List } from '@raycast/api';
 import { CurrencyFormat } from '@srcTypes';
 
 export function AccountView() {
-  const { data: accounts, isValidating } = useAccounts();
+  const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
+  const { data: accounts, isValidating } = useAccounts(activeBudgetId);
   const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
 
   return (
