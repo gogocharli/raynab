@@ -245,7 +245,7 @@ function filterByModifiers(modifiers: Modifier) {
         }
         case 'account': {
           const accountName = value.toLowerCase().replace('-', ' ');
-          isMatch = t.account_name.toLowerCase() === accountName;
+          isMatch = t.account_name.toLowerCase().search(accountName) !== -1;
           isMatch = isNegative ? !isMatch : isMatch;
           break;
         }
