@@ -79,7 +79,6 @@ export function TransactionView() {
         isLoading={isValidating}
         searchBarPlaceholder={`Search transactions in the last ${timeline}`}
         onSearchTextChange={(query) => dispatch({ type: 'search', query })}
-        throttle
       >
         {!Array.isArray(collection)
           ? Array.from(collection).map(([, group]) => (

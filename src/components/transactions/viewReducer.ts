@@ -12,6 +12,7 @@ import type {
 } from '@srcTypes';
 
 import { nanoid as randomId } from 'nanoid';
+import Fuse from 'fuse.js';
 
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
   switch (action.type) {
@@ -95,8 +96,37 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
       return { ...state, sort: newSort, collection: sortedCollection };
     }
     case 'search': {
-      console.log(action);
-      return state;
+      const { query } = action;
+      const { initialCollection } = state;
+
+      if (query === '') return { ...state, collection: initialCollection, search: '' };
+
+      const modifiersRegex = /(-?(?:account|type|amount):[\w-]+)/g;
+      const modifiersPosition = query.search(modifiersRegex);
+      const nonModifierString = modifiersPosition == -1 ? query : query.substring(0, modifiersPosition).trim();
+      const modifiers = query.match(modifiersRegex)?.reduce((prev, curr) => {
+        const [modifier, value] = curr.toLocaleLowerCase().split(':');
+
+        const isNegative = modifier.startsWith('-');
+        const modifierType = modifier.replace('-', '');
+
+        return prev.set(modifierType, { value, isNegative });
+      }, new Map());
+
+      const filteredCollection =
+        modifiers && modifiers.size > 0 ? initialCollection.filter(filterByModifiers(modifiers)) : initialCollection;
+
+      if (nonModifierString === '') return { ...state, collection: filteredCollection, search: query };
+
+      const fuse = new Fuse(filteredCollection, { keys: ['payee_name'], threshold: 0 });
+
+      const newCollection = fuse.search(nonModifierString).flatMap((result) => result.item);
+
+      return {
+        ...state,
+        search: query,
+        collection: newCollection,
+      };
     }
     default:
       //@ts-expect-error action type does not exist
@@ -183,4 +213,50 @@ function isSameFilter(filterA: Filter, filterB: Filter) {
   }
 
   return isSameObject;
+}
+
+type ModifierType = 'account' | 'type';
+// Narrow this type down depending on modifier type w/ typeguard
+type Modifier = Map<ModifierType, { value: string; isNegative: boolean }>;
+
+function filterByModifiers(modifiers: Modifier) {
+  return (t: TransactionDetail) => {
+    let isMatch = false;
+
+    for (const [modifier, content] of modifiers) {
+      const { value, isNegative } = content;
+      switch (modifier) {
+        case 'type': {
+          const { amount } = t;
+          switch (value) {
+            case 'inflow':
+              isMatch = amount >= 0;
+              isMatch = isNegative ? !isMatch : isMatch;
+              break;
+            case 'outflow':
+              isMatch = amount < 0;
+              isMatch = isNegative ? !isMatch : isMatch;
+              break;
+            default:
+              isMatch = false;
+              break;
+          }
+          break;
+        }
+        case 'account': {
+          const accountName = value.toLowerCase().replace('-', ' ');
+          isMatch = t.account_name.toLowerCase() === accountName;
+          isMatch = isNegative ? !isMatch : isMatch;
+          break;
+        }
+        default:
+          isMatch = false;
+          break;
+      }
+
+      if (isMatch === false) return false;
+    }
+
+    return true;
+  };
 }
