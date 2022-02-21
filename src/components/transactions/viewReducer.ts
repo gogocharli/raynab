@@ -14,6 +14,8 @@ import type {
 import { nanoid as randomId } from 'nanoid';
 import Fuse from 'fuse.js';
 
+const MODIFIERS_REGEX = /(-?(?:account|type|category):[\w-]+)/g;
+
 export function transactionViewReducer(state: ViewState, action: ViewAction): ViewState {
   switch (action.type) {
     case 'reset': {
@@ -101,10 +103,9 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
 
       if (query === '') return { ...state, collection: initialCollection, search: '' };
 
-      const modifiersRegex = /(-?(?:account|type|amount):[\w-]+)/g;
-      const modifiersPosition = query.search(modifiersRegex);
+      const modifiersPosition = query.search(MODIFIERS_REGEX);
       const nonModifierString = modifiersPosition == -1 ? query : query.substring(0, modifiersPosition).trim();
-      const modifiers = query.match(modifiersRegex)?.reduce((prev, curr) => {
+      const modifiers = query.match(MODIFIERS_REGEX)?.reduce((prev, curr) => {
         const [modifier, value] = curr.toLocaleLowerCase().split(':');
 
         const isNegative = modifier.startsWith('-');
@@ -215,7 +216,7 @@ function isSameFilter(filterA: Filter, filterB: Filter) {
   return isSameObject;
 }
 
-type ModifierType = 'account' | 'type';
+type ModifierType = 'account' | 'type' | 'category';
 // Narrow this type down depending on modifier type w/ typeguard
 type Modifier = Map<ModifierType, { value: string; isNegative: boolean }>;
 
@@ -249,11 +250,15 @@ function filterByModifiers(modifiers: Modifier) {
           isMatch = isNegative ? !isMatch : isMatch;
           break;
         }
+        case 'category': {
+          const categoryName = value.toLocaleLowerCase().replace('-', ' ');
+          isMatch = t.category_name != undefined && t.category_name.toLocaleLowerCase().search(categoryName) !== -1;
+          break;
+        }
         default:
           isMatch = false;
           break;
       }
-
       if (isMatch === false) return false;
     }
 
