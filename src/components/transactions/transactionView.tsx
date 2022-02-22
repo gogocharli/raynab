@@ -19,7 +19,7 @@ export function TransactionView() {
     {
       filter: null,
       group: null,
-      sort: 'date_desc',
+      sort: 'date_desc', // Default to newest transactions first
       search: '',
       collection: transactions,
       initialCollection: transactions,
@@ -27,7 +27,7 @@ export function TransactionView() {
     initView
   );
 
-  const { collection, group, sort, filter } = state;
+  const { collection, group, sort, filter, search: query } = state;
 
   // Prevents success toast from overriding a failure
   const errorToastPromise = useRef<Promise<Toast> | null>(null);
@@ -64,6 +64,9 @@ export function TransactionView() {
     }
 
     dispatch({ type: 'reset', initialCollection: transactions });
+
+    // Keep the current query in sync with the new collection to filter
+    dispatch({ type: 'search', query });
 
     if (errorToastPromise.current) {
       errorToastPromise.current.then((t) => setTimeout(() => t.hide(), 1500));

@@ -24,7 +24,10 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
         filter: null,
         group: null,
         sort: 'date_desc',
-        search: '',
+        // Keep the current search if it exists
+        // This prevents the collection from being out of sync with the
+        // search from the user since Raycast doesn't provide it as a controlled input
+        search: state.search,
         collection: initialItems,
         initialCollection: initialItems,
       };
@@ -253,6 +256,7 @@ function filterByModifiers(modifiers: Modifier) {
         case 'category': {
           const categoryName = value.toLocaleLowerCase().replace('-', ' ');
           isMatch = t.category_name != undefined && t.category_name.toLocaleLowerCase().search(categoryName) !== -1;
+          isMatch = isNegative ? !isMatch : isMatch;
           break;
         }
         default:
