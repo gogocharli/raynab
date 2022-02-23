@@ -39,7 +39,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
       id={transaction.id}
       title={transaction.payee_name ?? transaction.id}
       subtitle={formatToReadablePrice(transaction.amount)}
-      accessoryIcon={showFlags ? { source: Icon.Dot, tintColor: getColor(transaction.flag_color) } : undefined}
+      accessoryIcon={showFlags ? { source: Icon.Dot, tintColor: getFlagColor(transaction.flag_color) } : undefined}
       accessoryTitle={dayjs(transaction.date).fromNow()}
       actions={
         <ActionPanel title="Inspect Transaction">
@@ -69,7 +69,10 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
   );
 }
 
-function getColor(color: TransactionDetail.FlagColorEnum | null | undefined) {
+/**
+ * Match YNAB flag colors with Raycast colors
+ */
+function getFlagColor(color: TransactionDetail.FlagColorEnum | null | undefined) {
   const stringColor = color?.toString();
   switch (stringColor) {
     case 'red':

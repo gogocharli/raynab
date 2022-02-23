@@ -6,6 +6,9 @@ interface RenderActionIcons<T> {
   currentType: T | null;
 }
 
+/**
+ * Render the proper icon for each action depending on the current selection.
+ */
 export function renderActionIcon<T>({ defaultIcon, selectedIcon, currentType }: RenderActionIcons<T>) {
   return function (actionType: T) {
     if (actionType === currentType) return { source: selectedIcon ?? Icon.Checkmark, tintColor: Color.Green };

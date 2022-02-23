@@ -8,12 +8,12 @@ const location = resolve(environment.supportPath, 'local-storage');
 const localStorage = new LocalStorage(location);
 
 /**
- * Saves and retrieves data to and from sessionStorage
+ * Saves and retrieves data to and from localStorage
  * @param {string} key
  * @param {any} initalValue
  * @param {{serialize: (any) => string, deserialize: (string) => any}}
  * serializeOptions
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
  */
 
 type UseLocalStorage = <T>(

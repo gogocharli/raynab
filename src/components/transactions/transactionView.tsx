@@ -68,6 +68,7 @@ export function TransactionView() {
     // Keep the current query in sync with the new collection to filter
     dispatch({ type: 'search', query });
 
+    // Prevents success toast from overriding a failure
     if (errorToastPromise.current) {
       errorToastPromise.current.then((t) => setTimeout(() => t.hide(), 1500));
       errorToastPromise.current = null;

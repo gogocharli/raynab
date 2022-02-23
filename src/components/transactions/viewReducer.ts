@@ -71,7 +71,7 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
 
       const filteredCollection = Array.isArray(collection)
         ? initialCollection.filter(filterCollectionBy(newFilter))
-        : // TODO improve performance. Most .reduce calls could be replaced by for loops
+        : // TODO improve performance. Most .reduce calls could be replaced by for loops (?)
           initialCollection.filter(filterCollectionBy(newFilter)).reduce(groupToMap(group), new Map());
 
       return {
@@ -104,11 +104,18 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
       const { query } = action;
       const { initialCollection } = state;
 
+      // Do not bother matching empty queries
       if (query === '') return { ...state, collection: initialCollection, search: '' };
 
+      // Find the position of a match if it exists
       const modifiersPosition = query.search(MODIFIERS_REGEX);
+
+      // Loacte the part of the query which isn't a modifier
+      // This assumes that part to be at the beginning of the query
+      // TODO Other methods could be used but they are either slower, or require more complex regex
       const nonModifierString = modifiersPosition == -1 ? query : query.substring(0, modifiersPosition).trim();
       const modifiers = query.match(MODIFIERS_REGEX)?.reduce((prev, curr) => {
+        // split account:accountName
         const [modifier, value] = curr.toLocaleLowerCase().split(':');
 
         const isNegative = modifier.startsWith('-');
@@ -120,8 +127,10 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
       const filteredCollection =
         modifiers && modifiers.size > 0 ? initialCollection.filter(filterByModifiers(modifiers)) : initialCollection;
 
+      // If only modifiers exists within the query, do not bother searching for it
       if (nonModifierString === '') return { ...state, collection: filteredCollection, search: query };
 
+      // Search within the reduced collection which satisfies the conditions of the modifiers
       const fuse = new Fuse(filteredCollection, { keys: ['payee_name'], threshold: 0 });
 
       const newCollection = fuse.search(nonModifierString).flatMap((result) => result.item);
@@ -138,6 +147,9 @@ export function transactionViewReducer(state: ViewState, action: ViewAction): Vi
   }
 }
 
+/**
+ * Initialize the reducer with the required data.
+ */
 export function initView({
   filter = null,
   group = null,
@@ -155,6 +167,9 @@ export function initView({
   };
 }
 
+/**
+ * Returns a reducer function which groups items in the collection by the original argument.
+ */
 function groupToMap(groupBy: GroupNames | null) {
   // TODO improve this error
   if (!groupBy) throw 'Not a valid Groupname';
@@ -177,6 +192,10 @@ function groupToMap(groupBy: GroupNames | null) {
   };
 }
 
+/**
+ * Returns a compareFunction which sorts elements in the relevant order
+ * taking account of the direction.
+ */
 function sortCollectionBy(sortOrder: SortNames) {
   const [key, order] = sortOrder.split('_') as [SortTypes, sortOrder];
 
@@ -203,6 +222,9 @@ function filterCollectionBy(newFilter: Filter) {
   };
 }
 
+/**
+ * Discriminates between two filters action values.
+ */
 function isSameFilter(filterA: Filter, filterB: Filter) {
   if (!filterA && filterB) return false;
 
@@ -223,10 +245,23 @@ type ModifierType = 'account' | 'type' | 'category';
 // Narrow this type down depending on modifier type w/ typeguard
 type Modifier = Map<ModifierType, { value: string; isNegative: boolean }>;
 
+/**
+ * Given a set of positive or negative modifiers, this function filters the collection for items
+ * that match them.
+ * Each modifier is only applied once to the collection.
+ * */
 function filterByModifiers(modifiers: Modifier) {
   return (t: TransactionDetail) => {
     let isMatch = false;
 
+    /* 
+      Conceptually the code below is simple
+      - identify the modifier used
+      - apply the required condition
+      - If the modifier is inclusive:
+        - only include the items which fulfill the condition
+        - otherwise, only include the items that don't
+     */
     for (const [modifier, content] of modifiers) {
       const { value, isNegative } = content;
       switch (modifier) {
