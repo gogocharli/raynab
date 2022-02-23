@@ -25,10 +25,10 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
   const [payee, setPayee] = useState('');
   const [cleared, setCleared] = useState(false);
 
-  const { data: accounts = [] } = useAccounts();
-  const { data: categoryGroups } = useCategoryGroups();
-
   const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
+
+  const { data: accounts = [] } = useAccounts(activeBudgetId);
+  const { data: categoryGroups } = useCategoryGroups(activeBudgetId);
 
   async function handleSubmit(values: Values) {
     if (!isValidFormSubmission(values)) return;
