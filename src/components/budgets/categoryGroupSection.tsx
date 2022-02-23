@@ -73,7 +73,7 @@ export function CategoryGroupSection({
                         title="Create New Transaction"
                         icon={Icon.Plus}
                         target={<TransactionCreationForm categoryId={category.id} />}
-                        shortcut={{ modifiers: ['cmd'], key: 'c' }}
+                        shortcut={{ modifiers: ['opt'], key: 'c' }}
                       />
                     </ActionPanel.Section>
                   </ActionPanel>
