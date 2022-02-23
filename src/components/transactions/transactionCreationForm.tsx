@@ -1,6 +1,5 @@
-import { formatToYnabPrice } from '@lib/utils';
+import { formatToYnabPrice, isNumber } from '@lib/utils';
 import { ActionPanel, Action, Form, Icon, Color, showToast, Toast } from '@raycast/api';
-import { useState } from 'react';
 import { createTransaction } from '@lib/api';
 import { useAccounts } from '@hooks/useAccounts';
 import { useCategoryGroups } from '@hooks/useCategoryGroups';
@@ -21,12 +20,7 @@ interface Values {
 }
 
 export function TransactionCreationForm({ categoryId, accountId }: { categoryId?: string; accountId?: string }) {
-  const [date, setDate] = useState(new Date());
-  const [payee, setPayee] = useState('');
-  const [cleared, setCleared] = useState(false);
-
   const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
-
   const { data: accounts = [] } = useAccounts(activeBudgetId);
   const { data: categoryGroups } = useCategoryGroups(activeBudgetId);
 
@@ -58,9 +52,9 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
         title="Edit Transaction"
         text="Change one or more of the following fields to update the transaction."
       />
-      <Form.DatePicker id="date" title="Date of Transaction" value={date} onChange={setDate} />
+      <Form.DatePicker id="date" title="Date of Transaction" defaultValue={new Date()} />
       <Form.TextField id="amount" title={`Amount ${currencySymbol ? `(${currencySymbol})` : ''}`} defaultValue="0" />
-      <Form.TextField id="payee_name" title="Payee Name" value={payee} onChange={setPayee} />
+      <Form.TextField id="payee_name" title="Payee Name" defaultValue="" placeholder="Enter the counterparty" />
       <Form.Dropdown id="account_id" title="Account" defaultValue={accountId}>
         {accounts.map((account) => (
           <Form.Dropdown.Item key={account?.id ?? random()} value={account?.id} title={account?.name} />
@@ -74,7 +68,7 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
           ))}
       </Form.Dropdown>
       <Form.Separator />
-      <Form.Checkbox id="cleared" label="Has the transaction cleared?" value={cleared} onChange={setCleared} />
+      <Form.Checkbox id="cleared" label="Has the transaction cleared?" defaultValue={false} />
       <Form.TextArea id="memo" title="Memo" placeholder="Enter additional information…" />
 
       <Form.Dropdown id="flag_color" title="Flag Color" defaultValue="">
@@ -136,7 +130,7 @@ function isValidFormSubmission(values: Values) {
     }
   });
 
-  if (Number.isNaN(Number(values.amount))) {
+  if (!isNumber(values.amount)) {
     isValid = false;
     showToast({
       style: Toast.Style.Failure,

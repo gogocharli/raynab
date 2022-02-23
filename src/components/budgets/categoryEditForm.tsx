@@ -1,5 +1,5 @@
 import { Category, CurrencyFormat } from '@srcTypes';
-import { formatToReadablePrice, formatToYnabPrice } from '@lib/utils';
+import { formatToReadablePrice, formatToYnabPrice, isNumber } from '@lib/utils';
 import { ActionPanel, Action, Form, Icon, Color, showToast, Toast, confirmAlert } from '@raycast/api';
 import { updateCategory } from '@lib/api';
 import { useLocalStorage } from '@hooks/useLocalStorage';
@@ -65,7 +65,7 @@ export function CategoryEditForm({ category }: { category: Category }) {
 function isValidFormSubmission(values: Values) {
   let isValid = true;
 
-  if (Number.isNaN(Number(values.budgeted))) {
+  if (!isNumber(values.budgeted)) {
     isValid = false;
     showToast({
       style: Toast.Style.Failure,

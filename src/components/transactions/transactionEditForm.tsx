@@ -1,4 +1,4 @@
-import { formatToReadablePrice, formatToYnabPrice } from '@lib/utils';
+import { formatToReadablePrice, formatToYnabPrice, isNumber } from '@lib/utils';
 import { ActionPanel, Action, Form, Icon, Color, showToast, Toast } from '@raycast/api';
 import { CurrencyFormat, TransactionDetail } from '@srcTypes';
 import { useState } from 'react';
@@ -101,12 +101,12 @@ function isValidFormSubmission(values: Values) {
     }
   });
 
-  if (Number.isNaN(Number(values.amount))) {
+  if (!isNumber(values.amount)) {
     isValid = false;
     showToast({
       style: Toast.Style.Failure,
       title: `Incorrect value for the amount`,
-      message: `${values.amount} is not a valid number`,
+      message: values.amount ? `${values.amount} is not a valid number` : 'Enter a valid number',
     });
   }
 
