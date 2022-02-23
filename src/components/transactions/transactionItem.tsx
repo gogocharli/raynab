@@ -16,7 +16,7 @@ import {
   ToggleFlagsAction,
 } from '@components/actions';
 import { TransactionEditForm } from './transactionEditForm';
-import { FilterBySubmenu } from '@components/actions/filterBySubmenu';
+import { FilterBySubmenu } from '@components/actions/filterSubmenu';
 
 const INFLOW_ICON = { source: Icon.ChevronUp, tintColor: Color.Green };
 const OUTFLOW_ICON = { source: Icon.ChevronDown, tintColor: Color.Red };

@@ -5,7 +5,7 @@ import { Shortcuts } from '@constants';
 
 export function FilterBySubmenu({ onFilter, currentFilter }: { onFilter: onFilterType; currentFilter: Filter }) {
   return (
-    <ActionPanel.Submenu title="Filter by" shortcut={Shortcuts.Filter} icon={Icon.Pin}>
+    <ActionPanel.Submenu title="Set Filter" shortcut={Shortcuts.Filter} icon={Icon.Pin}>
       <Action
         title="Inflow (Positive)"
         icon={currentFilter?.value === 'inflow' ? { source: Icon.Checkmark, tintColor: Color.Green } : Icon.ChevronUp}

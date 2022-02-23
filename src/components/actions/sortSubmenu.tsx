@@ -11,7 +11,7 @@ export function SortBySubmenu({ onSort, currentSort }: { onSort: onSortType; cur
   });
 
   return (
-    <ActionPanel.Submenu icon={Icon.Envelope} title="Sort By" shortcut={Shortcuts.Sort}>
+    <ActionPanel.Submenu icon={Icon.Envelope} title="Set Sorting" shortcut={Shortcuts.Sort}>
       <Action title="Amount (Low to High)" icon={renderSortIcon('amount_asc')} onAction={onSort('amount_asc')} />
       <Action title="Amount (High to Low)" icon={renderSortIcon('amount_desc')} onAction={onSort('amount_desc')} />
       <Action title="Date (Old to New)" icon={renderSortIcon('date_asc')} onAction={onSort('date_asc')} />
