@@ -20,6 +20,7 @@ export function BudgetDetails({ budget }: { budget: BudgetDetailSummary | undefi
   `;
   return (
     <Detail
+      navigationTitle={`${getCurrentMonth()} Budget`}
       markdown={markdown}
       actions={
         <ActionPanel>

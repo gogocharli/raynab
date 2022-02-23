@@ -47,6 +47,7 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
           <Action.SubmitForm title="Submit" onSubmit={handleSubmit} />
         </ActionPanel>
       }
+      navigationTitle="Create transaction"
     >
       <Form.Description
         title="Edit Transaction"

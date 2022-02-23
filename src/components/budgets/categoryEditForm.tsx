@@ -46,6 +46,7 @@ export function CategoryEditForm({ category }: { category: Category }) {
 
   return (
     <Form
+      navigationTitle="Edit Category"
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Submit" onSubmit={handleSubmit} />

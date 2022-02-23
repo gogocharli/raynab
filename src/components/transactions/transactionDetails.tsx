@@ -22,6 +22,7 @@ export function TransactionDetails({ transaction }: { transaction: TransactionDe
   `;
   return (
     <Detail
+      navigationTitle="Transaction Details"
       markdown={markdown}
       actions={
         <ActionPanel>

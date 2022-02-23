@@ -24,6 +24,7 @@ export function CategoryDetails({ category }: { category: Category }) {
   `;
   return (
     <Detail
+      navigationTitle={`${category.name}`}
       markdown={markdown}
       actions={
         <ActionPanel>

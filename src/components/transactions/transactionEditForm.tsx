@@ -46,6 +46,7 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
 
   return (
     <Form
+      navigationTitle="Edit Transaction"
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Submit" onSubmit={handleSubmit} />
