@@ -20,7 +20,7 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
   const [amount, setAmount] = useState(formatToReadablePrice(transaction.amount, false));
   const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
 
-  const { data: payees } = usePayees(activeBudgetId);
+  const { data: payees, isValidating } = usePayees(activeBudgetId);
 
   const [activeBudgetCurrency] = useLocalStorage<CurrencyFormat | null>('activeBudgetCurrency', null);
   const currencySymbol = activeBudgetCurrency?.currency_symbol;
@@ -52,6 +52,7 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
           <Action.SubmitForm title="Submit" onSubmit={handleSubmit} />
         </ActionPanel>
       }
+      isLoading={isValidating}
     >
       <Form.Description
         title="Edit Transaction"

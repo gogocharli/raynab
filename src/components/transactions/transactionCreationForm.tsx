@@ -21,8 +21,8 @@ interface Values {
 
 export function TransactionCreationForm({ categoryId, accountId }: { categoryId?: string; accountId?: string }) {
   const [activeBudgetId] = useLocalStorage('activeBudgetId', '');
-  const { data: accounts = [] } = useAccounts(activeBudgetId);
-  const { data: categoryGroups } = useCategoryGroups(activeBudgetId);
+  const { data: accounts = [], isValidating: isLoadingAccounts } = useAccounts(activeBudgetId);
+  const { data: categoryGroups, isValidating: isLoadingCategories } = useCategoryGroups(activeBudgetId);
 
   async function handleSubmit(values: Values) {
     if (!isValidFormSubmission(values)) return;
@@ -48,6 +48,7 @@ export function TransactionCreationForm({ categoryId, accountId }: { categoryId?
         </ActionPanel>
       }
       navigationTitle="Create transaction"
+      isLoading={isLoadingAccounts || isLoadingCategories}
     >
       <Form.Description
         title="Edit Transaction"
