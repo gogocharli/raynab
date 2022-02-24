@@ -70,7 +70,12 @@ export function TransactionEditForm({ transaction }: { transaction: TransactionD
           <Form.Dropdown.Item key={payee.id} value={payee.id} title={payee.name} />
         ))}
       </Form.Dropdown>
-      <Form.TextArea id="memo" defaultValue={transaction.memo ?? ''} placeholder="Enter additional information…" />
+      <Form.TextArea
+        id="memo"
+        title="Memo"
+        defaultValue={transaction.memo ?? ''}
+        placeholder="Enter additional information…"
+      />
       <Form.Dropdown id="flag_color" title="Flag Color" defaultValue="">
         <Form.Dropdown.Item value="" title="No Flag" icon={{ source: Icon.Dot }} />
         <Form.Dropdown.Item value="red" title="Red" icon={{ source: Icon.Dot, tintColor: Color.Red }} />
