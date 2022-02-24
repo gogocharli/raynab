@@ -54,7 +54,7 @@ export function TransactionItem({ transaction }: { transaction: TransactionDetai
               icon={Icon.Pencil}
               target={<TransactionEditForm transaction={transaction} />}
             />
-            <OpenInYnabAction />
+            <OpenInYnabAction accounts accountId={transaction.account_id} />
             <ToggleFlagsAction showFlags={showFlags} setShowFlags={setShowFlags} />
           </ActionPanel.Section>
           <ActionPanel.Section title="Modify List View">
