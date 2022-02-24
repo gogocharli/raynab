@@ -39,7 +39,7 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.28.0",
+    "@raycast/api": "^1.29.1",
     "dayjs": "^1.10.7",
     "fuse.js": "^6.5.3",
     "nanoid": "^3.2.0",
