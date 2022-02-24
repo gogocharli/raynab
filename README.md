@@ -1,10 +1,10 @@
 # Raynab
 
-<!-- Insert image here -->
+![Cover](./media/raynab-cover.jpg)
 
 ## Overview
 
-[You Need A Budget](https://www.youneedabudget.com/), or simply YNAB, is a budgeting app popular for its focus on budget managing tenant called [*The Four Rules*](https://www.youneedabudget.com/the-four-rules/).
+[You Need A Budget](https://www.youneedabudget.com/), or simply YNAB, is a budgeting app popular for its focus on budget managing tenant called [_The Four Rules_](https://www.youneedabudget.com/the-four-rules/).
 
 Raynab is an extension which allows YNAB users to manage one or multiple budgets directly from within Raycast. The aim is to reduce friction and allow you to stay on top of your budget at any point in time.
 
@@ -41,7 +41,7 @@ You can change the active budget at any time using the command. For most people 
 
 This command will list your transactions for up to a year. It is the heart of Raynab as this will probably the place where you will spend most of your time understanding your inflows and outflows.
 
-#### *Transaction Item*
+#### _Transaction Item_
 
 Each transaction is presented from left to right:
 
@@ -50,9 +50,10 @@ Each transaction is presented from left to right:
 - The amount of the transaction (either positive or negative)
 - How long ago it occurred
 
-#### *Actions*
+#### _Actions_
 
 - Inspect Transaction
+
   - Show Transaction (`↵`): Give a detailed view of the transaction
     - Amount
     - Payee
@@ -66,15 +67,15 @@ Each transaction is presented from left to right:
     - Flag
   - Open in YNAB (`⌘` + `O`): Open the current budget in the YNAB Web App
 
-      YNAB doesn’t have a specific view of the transaction, this will simply direct you to your budget. In the future, we will change the redirect to lead to your account.
+    YNAB doesn’t have a specific view of the transaction, this will simply direct you to the transaction view for the associated account.
 
   - Toggle Flags (`⌥` + `F`): Show or hide flags for all transactions
 
-      Flags are hidden by default as they are optional for users of YNAB
+    Flags are hidden by default as they are optional for users of YNAB
 
 - Modify List View
 
-   > Actions in this list are behind submenus. Each action will show a checkmark icon when selected. Click on the same action to deselect it.
+  > Actions in this list are behind submenus. Each action will show a checkmark icon when selected. Click on the same action to deselect it.
 
   - Set Grouping (`⌘` + `G`): Group transactions in sections by a given criterion
     - Category: The category of the transaction
@@ -86,6 +87,7 @@ Each transaction is presented from left to right:
     - Date ascending
     - Date descending — This is the default. Will return to this state if nothing is selected.
   - Set Timeline (`⌘` + `T`): Allow to change the time period of the listed transactions
+
     - Last day
     - Last week
     - Last month
@@ -97,12 +99,13 @@ Each transaction is presented from left to right:
       > When opening the Command for the first time, we make this check for you.
 
   - Set Filter (`⌘` + `F`): Filter the transactions by inflow or outflow
+
     - Inflow: Positive transactions are shown
     - Outflow: Negative transactions are shown
 
       > This action is superseded by the advanced search feature, more on that below, but I’ve decided to keep it.
 
-#### *Advanced Search*
+#### _Advanced Search_
 
 My personal favourite feature about the extension. Advanced Search makes use of modifiers to filter the transactions list to match the query. It is mainly inspired by Slack and Google search features.
 
@@ -120,11 +123,11 @@ Let’s say you would like to search for a transaction at your favourite restaur
 
 As you can see, you can combine modifiers with your query, but what if you wanted to show all of a payee’s transactions which did not occur in a particular account.
 
-Negative modifiers are the same as normal modifiers, but instead they will *exclude* all transactions which match their input.
+Negative modifiers are the same as normal modifiers, but instead they will _exclude_ all transactions which match their input.
 
 - Typing `Taco Bell account:chase-checking -category:groceries` will show Taco Bell transactions but not those you have filed as "Groceries” by "mistake”.
 
-> You don't need to enter a payee name before using modifiers. For example `type:inflow` will show *all* transactions with non-negative amounts.
+> You don't need to enter a payee name before using modifiers. For example `type:inflow` will show _all_ transactions with non-negative amounts.
 
 **Note:** **The payee name must happen before any modifiers otherwise they will be ignored. Typing `account:chase-checking Taco Bell`** **will show all transactions in your Chase Checking account.**
 
@@ -143,7 +146,7 @@ The following fields are required:
 
 Display a list of all accounts associated with the selected budget.
 
-#### *Account Item*
+#### _Account Item_
 
 Each account is presented from left to right:
 
@@ -154,7 +157,7 @@ Each account is presented from left to right:
   - Green: The direct import is functioning
   - Red: There is an error with the direct import
 
-#### *Actions*
+#### _Actions_
 
 - Create New Transaction (`↵`): Create a new transaction on the selected account
   - Amount
@@ -163,22 +166,23 @@ Each account is presented from left to right:
   - Category
 - Open in YNAB (`⌘` + `O`): Open the current account in the YNAB web app
 
-   YNAB doesn’t have a specific view of the transaction, this will simply direct you to your budget. In the future, we will change the redirect to lead to your account.
+  YNAB doesn’t have a specific view of the transaction, this will simply direct you to your budget. In the future, we will change the redirect to lead to your account.
 
 ### View Active Budget
 
 Gives access to the current monthly budget information by listing its different categories along with their balance and state.
 
-#### *Category Item*
+#### _Category Item_
 
 Categories are grouped in their original category group. Each category is presented from left to right:
 
 - The category name
 - The remaining balance to date
 
-#### *Actions*
+#### _Actions_
 
 - Inspect Budget
+
   - Show Category (`↵`): Give a detailed view of the category
     - Goal (if there’s one)
     - Budgeted
@@ -191,11 +195,9 @@ Categories are grouped in their original category group. Each category is presen
     - Income
   - Open in YNAB (`⌘` + `O`): Open the current budget in the YNAB Web App
 
-      YNAB doesn’t have a specific view of the transaction, this will simply direct you to your budget. In the future, we will change the redirect to lead to your account.
-
   - Toggle Progress (`⌘` + `P`): Show or hide progress bar for category goals
 
-      Categories with no goals or associated progress will show as `N/A`
+    Categories with no goals or associated progress will show as `N/A`
 
 - Modify List View
   - Edit Category (`⌘` + `E`): Edit any of the provided transaction information
