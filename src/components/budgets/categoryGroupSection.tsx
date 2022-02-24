@@ -42,8 +42,8 @@ export function CategoryGroupSection({
                     : renderDefaultTitle(category, activeBudgetCurrency?.currency_symbol)
                 }
                 actions={
-                  <ActionPanel title="Inspect">
-                    <ActionPanel.Section>
+                  <ActionPanel>
+                    <ActionPanel.Section title="Inspect Budget">
                       <Action.Push
                         title="Show Category"
                         icon={Icon.Eye}
@@ -62,7 +62,7 @@ export function CategoryGroupSection({
                         shortcut={{ modifiers: ['cmd'], key: 'p' }}
                       />
                     </ActionPanel.Section>
-                    <ActionPanel.Section title="Modify">
+                    <ActionPanel.Section title="Modify List View">
                       <Action.Push
                         title="Edit Category"
                         icon={Icon.Pencil}
